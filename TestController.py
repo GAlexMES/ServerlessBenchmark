@@ -1,4 +1,3 @@
-from ConfigController import *
 from ResultController import *
 from ConfigController import *
 
@@ -13,27 +12,44 @@ def run_test(args):
     test_number = args[1]
 
     if test_number == '1':
-        run_overhead_test(args)
+        run_testFun(run_overhead_test_short, args)
     elif test_number == '2':
-        run_concurrency_test(args)
+        run_testFun(run_concurrency_test_short, args)
     elif test_number == '3':
-        run_container_reuse_test(args)
+        run_testFun(run_container_reuse_test_short, args)
     elif test_number == '4':
-        run_payload_test(args)
+        run_testFun(run_payload_test_short, args)
     elif test_number == '5':
-        run_overhead_languages_test(args)
+        run_testFun(run_overhead_languages_test_short, args)
     elif test_number == '6':
-        run_memory_test(args)
+        run_testFun(run_memory_test_short, args)
     elif test_number == '7':
-        run_weight_test(args)
+        run_testFun(run_weight_test_short, args)
 
 
-def run_overhead_test(args):
-    serverless_provider = args[0].lower()
+def run_overhead_test_short(args, files, serverless_provider, function_url,  template, ts):
     test_number = args[1]
     execution_time = args[2]
+    print(args)
+
+    if test_number != '1':
+        return None
+
+    update_t1_template(function_url, execution_time, template, test_number)
+    file_name = get_output_file_name(ts, serverless_provider)
+    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name),
+                               get_jmeter_path(), serverless_provider, 'T' + test_number)
+    #print(str(jmeter_result.decode('UTF-8')))
+
+    file = (file_name, serverless_provider)
+    files.append(file)
+
+    return execution_time
 
 
+def run_testFun(testFun, args):
+    serverless_provider = args[0].lower()
+    test_number = args[1]
 
     print('Getting JMeter template...')
     template = get_template(test_number)
@@ -44,598 +60,240 @@ def run_overhead_test(args):
 
     ts = int(time.time())
 
-    if serverless_provider == 'all':
+    files = []
 
-        files = []
-        for provider in get_all_providers(test_number):
-            serverless_provider = provider
+    serverless_providers = get_all_providers(test_number) if serverless_provider == 'all' else [serverless_provider]
 
-            if test_number == '1':
-                print('Updating Template for test...')
-
-                function_url = get_function_url(serverless_provider, test_number)
-
-                if function_url is None or function_url =="":
-                    print("No function deployed for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-                else:
-                    update_t1_template(function_url, execution_time, template, test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-                    file = (file_name, serverless_provider)
-                    files.append(file)
-
-        print('Calculate the result...')
-        result_controller(test_number, files, ts, 'all', execution_time)
-
-    else:
+    execution_time = ""
+    for provider in serverless_providers:
 
         if not verify_test_provider(test_number, serverless_provider):
             print("The test is not specified for that provider")
             return None;
 
-        if test_number == '1':
-            print('Updating Template for test...')
-            files = []
+        print('Updating Template for test...')
+        function_url = get_function_url(serverless_provider, test_number)
 
-            function_url = get_function_url(serverless_provider, test_number)
+        if function_url is None or function_url == "":
+            print("No function deployed for test T" + test_number + " on " + serverless_provider + " provider")
+            continue
 
-            if function_url is None or function_url == "":
-                print("No function deployed for test T" + test_number + " on " + serverless_provider + " provider")
-                return None
-            else:
-                update_t1_template(function_url, execution_time, template, test_number)
-                file_name = get_output_file_name(ts, serverless_provider)
-                jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name),
-                                       get_jmeter_path(), serverless_provider, 'T' + test_number)
-                #print(str(jmeter_result.decode('UTF-8')))
+        test_execution_time = testFun(args, files, provider, function_url, template, ts)
 
-                file = (file_name, serverless_provider)
-                files.append(file)
-
-                print('Calculate the result...')
-                result_controller(test_number, files, ts, serverless_provider, execution_time)
+        if test_execution_time != None:
+            execution_time = test_execution_time
 
 
-def run_concurrency_test(args):
-    serverless_provider = args[0].lower()
+    print('Calculate the result...')
+    result_name = 'all' if serverless_provider == 'all' else serverless_provider
+    result_controller(test_number, files, ts, result_name, execution_time)
+
+
+def run_concurrency_test_short(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     min_concurrency = int(args[2])
     max_concurrency = int(args[3])
     concurrency_step = int(args[4])
     execution_time = args[5]
 
-
-    print('Getting JMeter template...')
-    template = get_template(test_number)
-
-    if template == None:
-        print('No template for test founded!')
+    if test_number != '2':
         return None
 
-    ts = int(time.time())
+    files_provider = []
+    for num_threads in range(min_concurrency, max_concurrency + 1, concurrency_step):
+        update_t2_template(function_url, execution_time, template, test_number, num_threads)
+        file_name = get_output_file_name(ts, serverless_provider)
+        file_name_aux = file_name.split('.')
+        file_name_final = file_name_aux[0] + '-concurrency_' + str(num_threads) + '.' + file_name_aux[1]
+        jmeter_result = run_jmeter(get_template_path(test_number),
+                                   get_output_file(test_number, file_name_final),
+                                   get_jmeter_path(), serverless_provider, 'T' + test_number)
+        #print(str(jmeter_result.decode('UTF-8')))
 
-    if serverless_provider == 'all' and test_number == "2":
+        throughput = get_running_data(str(jmeter_result.decode('UTF-8')))
 
-        files = []
-
-        for provider in get_all_providers(test_number):
-            serverless_provider = provider
-            files_provider = []
-            for num_threads in range(min_concurrency, max_concurrency + 1, concurrency_step):
-
-                function_url = get_function_url(serverless_provider, test_number)
-
-                if function_url is None or function_url =="":
-                    print("No function deployed for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-                else:
-                    update_t2_template(function_url, execution_time, template, test_number, num_threads)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-concurrency_' + str(num_threads) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                           get_output_file(test_number, file_name_final),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-                    throughput = get_running_data(str(jmeter_result.decode('UTF-8')))
-
-                    file = (file_name_final, serverless_provider, num_threads, throughput)
-                    files_provider.append(file)
-
-            files.append(files_provider)
-
-        print('Calculate the result...')
-        result_controller(test_number, files, ts, "all", execution_time)
-
-    else:
-
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
-
-        if test_number == '2':
-            print('Updating Template for test...')
-            files = []
-            files_provider = []
-            for num_threads in range(min_concurrency, max_concurrency + 1, concurrency_step):
-
-                function_url = get_function_url(serverless_provider, test_number)
-
-                if function_url is None or function_url =="":
-                    print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-                else:
-                    update_t2_template(function_url, execution_time, template, test_number, num_threads)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-concurrency_' + str(num_threads) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                           get_output_file(test_number, file_name_final),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-                    throughput = get_running_data(str(jmeter_result.decode('UTF-8')))
-
-                    file = (file_name_final, serverless_provider, num_threads, throughput)
-                    files_provider.append(file)
-
-            # print (files)
-            files.append(files_provider)
-            print('Calculate the result...')
-            result_controller(test_number, files, ts, serverless_provider, execution_time)
+        file = (file_name_final, serverless_provider, num_threads, throughput)
+        files_provider.append(file)
+    files.append(files_provider)
 
 
-def run_container_reuse_test(args):
-    serverless_provider = args[0].lower()
+def run_container_reuse_test_short(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     min_wait_time = int(args[2])
     max_wait_time = int(args[3])
     time_step = int(args[4])
     execution_time = args[5]
 
+    if test_number != '3':
+        return None
+
+
+    files_provider = []
+
     print('Getting JMeter template...')
-    template = get_template(test_number+'_0')
+    template = get_template(test_number + '_0')
 
     if template == None:
         print('No template for test founded!')
         return None
 
-    ts = int(time.time())
-
-    if serverless_provider == 'all' and test_number == "3":
-
-        files = []
-
-        for provider in get_all_providers(test_number):
-            serverless_provider = provider
-            files_provider = []
-
-            print('Getting JMeter template...')
-            template = get_template(test_number + '_0')
-
-            if template == None:
-                print('No template for test founded!')
-                return None
-
-            print('Updating Template for test...')
-
-            function_url = get_function_url(serverless_provider, test_number)
-
-            if function_url is None or function_url == "":
-                print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                return None
-
-            else:
-                update_t1_template(function_url, execution_time, template, test_number + '_0')
-                file_name = get_output_file_name(ts, serverless_provider)
-                file_name_aux = file_name.split('.')
-                file_name_final = file_name_aux[0] + '-preexecution' + '.' + file_name_aux[1]
-
-                jmeter_result = run_jmeter(get_template_path(test_number + '_0'),
-                                       get_output_file(test_number, file_name_final),
-                                       get_jmeter_path(), serverless_provider, 'T' + test_number)
-
-                print('Pre executions:')
-                #print(str(jmeter_result.decode('UTF-8')))
-
-                template = get_template(test_number + '_1')
-
-                if template == None:
-                    print('No template for test founded!')
-                    return None
-
-                print('Updating Template for test...')
-
-                for wait_time in range(min_wait_time, max_wait_time + 1, time_step):
-                    print('\nRun test in ' + serverless_provider + ' after waiting ' + str(wait_time) + 'seconds!\n')
-
-                    time.sleep(wait_time)
+    print('Updating Template for test...')
 
 
-                    update_t3_template(get_function_url(serverless_provider, test_number), template,
-                                       test_number + '_1')
+    update_t1_template(function_url, execution_time, template, test_number + '_0')
+    file_name = get_output_file_name(ts, serverless_provider)
+    file_name_aux = file_name.split('.')
+    file_name_final = file_name_aux[0] + '-preexecution' + '.' + file_name_aux[1]
 
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-waittime_' + str(wait_time) + '.' + file_name_aux[1]
+    jmeter_result = run_jmeter(get_template_path(test_number + '_0'),
+                           get_output_file(test_number, file_name_final),
+                           get_jmeter_path(), serverless_provider, 'T' + test_number)
 
-                    jmeter_result = run_jmeter(get_template_path(test_number + '_1'),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
+    print('Pre executions:')
+    #print(str(jmeter_result.decode('UTF-8')))
 
-                    #print(str(jmeter_result.decode('UTF-8')))
+    template = get_template(test_number + '_1')
 
-                    file = (file_name_final, serverless_provider, wait_time)
-                    files_provider.append(file)
+    if template == None:
+        print('No template for test founded!')
+        return None
 
-                files.append(files_provider)
+    print('Updating Template for test...')
 
-        #print(files)
-        print('Calculate the result...')
-        result_controller(test_number, files, ts, "all", execution_time)
+    for wait_time in range(min_wait_time, max_wait_time + 1, time_step):
+        print('\nRun test in ' + serverless_provider + ' after waiting ' + str(wait_time) + 'seconds!\n')
 
-    else:
+        time.sleep(wait_time)
 
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
+        update_t3_template(get_function_url(serverless_provider, test_number), template,
+                           test_number + '_1')
 
-        if test_number == '3':
-            print('Updating Template for test...')
+        file_name = get_output_file_name(ts, serverless_provider)
+        file_name_aux = file_name.split('.')
+        file_name_final = file_name_aux[0] + '-waittime_' + str(wait_time) + '.' + file_name_aux[1]
 
-            function_url = get_function_url(serverless_provider, test_number)
+        jmeter_result = run_jmeter(get_template_path(test_number + '_1'),
+                                   get_output_file(test_number, file_name_final),
+                                   get_jmeter_path(), serverless_provider, 'T' + test_number)
 
-            if function_url is None or function_url == "":
-                print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                return None
+        #print(str(jmeter_result.decode('UTF-8')))
 
-            else:
-                update_t1_template(function_url, execution_time, template, test_number+'_0')
-                file_name = get_output_file_name(ts, serverless_provider)
-                file_name_aux = file_name.split('.')
-                file_name_final = file_name_aux[0] + '-preexecution' + '.' + file_name_aux[1]
+        file = (file_name_final, serverless_provider, wait_time)
+        files_provider.append(file)
 
-                jmeter_result = run_jmeter(get_template_path(test_number+'_0'), get_output_file(test_number, file_name_final),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
+    files.append(files_provider)
 
-                print('Pre executions:')
-                #print(str(jmeter_result.decode('UTF-8')))
-
-                template = get_template(test_number + '_1')
-
-                if template == None:
-                    print('No template for test founded!')
-                    return None
-
-                print('Updating Template for test...')
-                files = []
-                files_provider = []
-
-                for wait_time in range(min_wait_time, max_wait_time + 1, time_step):
-                    print('\nRun test in ' + serverless_provider + ' after waiting ' + str(wait_time) + ' seconds!\n')
-
-                    time.sleep(wait_time)
-
-
-                    update_t3_template(get_function_url(serverless_provider, test_number), template,
-                                       test_number+'_1')
-
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-waittime_' + str(wait_time) + '.' + file_name_aux[1]
-
-                    jmeter_result = run_jmeter(get_template_path(test_number+'_1'),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-
-
-
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-
-                    file = (file_name_final, serverless_provider, wait_time)
-                    files_provider.append(file)
-
-                files.append(files_provider)
-                #print(files)
-
-                print('Calculate the result...')
-                result_controller(test_number, files, ts, serverless_provider, execution_time)
-
-def run_payload_test(args):
-
-    serverless_provider = args[0].lower()
+def run_payload_test_short(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
     payloadsize = get_payload_size(test_number)
 
-    print('Getting JMeter template...')
-    template = get_template(test_number)
-
-    if template == None:
-        print('No template for test founded!')
+    if test_number != "4":
         return None
 
-    ts = int(time.time())
+    files_provider = []
 
-    if serverless_provider == 'all' and test_number == "4":
+    for pay_size in payloadsize:
+        function_url_with_pay_size = function_url + '?n='+str(pay_size)
+        update_t1_template(function_url_with_pay_size, execution_time, template,test_number)
+        file_name = get_output_file_name(ts, serverless_provider)
+        file_name_aux = file_name.split('.')
+        file_name_final = file_name_aux[0] + '-payloadSize_' + str(pay_size) + '.' + file_name_aux[1]
+        jmeter_result = run_jmeter(get_template_path(test_number),
+                                   get_output_file(test_number, file_name_final),
+                                   get_jmeter_path(), serverless_provider, 'T' + test_number)
+        #print(str(jmeter_result.decode('UTF-8')))
 
-        files = []
+        file = (file_name_final, serverless_provider, pay_size)
+        files_provider.append(file)
 
-        for provider in get_all_providers(test_number):
-            serverless_provider = provider
-            files_provider = []
-
-            for pay_size in payloadsize:
-                function_url = get_function_url(serverless_provider, test_number)
-                if function_url is None or function_url == "":
-                    print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-                    function_url = function_url + '?n='+str(pay_size)
-                    update_t1_template(function_url, execution_time, template,test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-payloadSize_' + str(pay_size) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
+    files.append(files_provider)
+    return execution_time
 
 
-                    file = (file_name_final, serverless_provider, pay_size)
-                    files_provider.append(file)
 
-            files.append(files_provider)
-
-        #print(files)
-        print('Calculate the result...')
-        result_controller(test_number, files, ts, "all", execution_time)
-
-    else:
-
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
-
-        if test_number == '4':
-            print('Updating Template for test...')
-            files = []
-            files_provider = []
-            for pay_size in payloadsize:
-                function_url = get_function_url(serverless_provider, test_number)
-                if function_url is None or function_url == "":
-                    print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-                    function_url = function_url + '?n='+str(pay_size)
-                    update_t1_template(function_url, execution_time, template,test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-payloadSize_' + str(pay_size) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-
-                    file = (file_name_final, serverless_provider, pay_size)
-                    files_provider.append(file)
-
-            files.append(files_provider)
-
-            #print(files)
-            print('Calculate the result...')
-            result_controller(test_number, files, ts, serverless_provider, execution_time)
-
-
-def run_overhead_languages_test(args):
-    serverless_provider = args[0].lower()
+def run_overhead_languages_test_short(args, files, serverless_provider, function, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
-    print('Getting JMeter template...')
-    template = get_template(test_number)
-
-    if template == None:
-        print('No template for test founded!')
+    if test_number != '5':
         return None
 
-    ts = int(time.time())
+    for prog_lang, url in function.items():
+        if url is None or url == "":
+            print("No function in " + prog_lang + " for test T" + test_number + " on " + serverless_provider + " provider")
+            return None
 
-    if serverless_provider == 'all':
+        else:
+            update_t1_template(url, execution_time, template, test_number)
+            file_name = get_output_file_name(ts, serverless_provider)
+            file_name_aux = file_name.split('.')
 
-        print('Run the test for one provider at a time')
+            file_name_final = file_name_aux[0] + '-Pro_Language_' + str(prog_lang) + '.' + file_name_aux[1]
 
-    else:
+            jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name_final),
+                                   get_jmeter_path(), serverless_provider, 'T' + test_number)
+            #print(str(jmeter_result.decode('UTF-8')))
 
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
-
-        if test_number == '5':
-            print('Updating Template for test...')
-
-            functions = get_function_url(serverless_provider, test_number)
-            files = []
-            for prog_lang, url in functions.items():
-                if url is None or url == "":
-                    print("No function in " + prog_lang + " for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-
-                    update_t1_template(url, execution_time, template, test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-
-                    file_name_final = file_name_aux[0] + '-Pro_Language_' + str(prog_lang) + '.' + file_name_aux[1]
-
-                    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name_final),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
+            file = (file_name_final, prog_lang)
+            files.append(file)
 
 
-
-                    file = (file_name_final, prog_lang)
-                    files.append(file)
-
-            print('Calculate the result...')
-            result_controller(test_number, files, ts, serverless_provider, execution_time)
-
-
-def run_memory_test(args):
-    serverless_provider = args[0].lower()
+def run_memory_test_short(args, files, serverless_provider, functions, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
-    print('Getting JMeter template...')
-    template = get_template(test_number)
-
-    if template == None:
-        print('No template for test founded!')
+    if test_number != '6':
         return None
 
-    ts = int(time.time())
+    for func_mem, url in functions.items():
+        if url is None or url == "":
+            print("No function with " + func_mem + "Mb of memory for test T" + test_number + " on " + serverless_provider + " provider")
+            return None
 
-    if serverless_provider == 'all':
+        else:
+            update_t1_template(url, execution_time, template, test_number)
+            file_name = get_output_file_name(ts, serverless_provider)
+            file_name_aux = file_name.split('.')
 
-        print('Run the test for one provider at a time')
+            file_name_final = file_name_aux[0] + '-Memory_' + str(func_mem) + '.' + file_name_aux[1]
 
-    else:
+            jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name_final),
+                                   get_jmeter_path(), serverless_provider, 'T' + test_number)
+            #print(str(jmeter_result.decode('UTF-8')))
 
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
-
-        if test_number == '6':
-            print('Updating Template for test...')
-
-            functions = get_function_url(serverless_provider, test_number)
-            files = []
-            for func_mem, url in functions.items():
-                if url is None or url == "":
-                    print("No function with " + func_mem + "Mb of memory for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-                    update_t1_template(url, execution_time, template, test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-
-                    file_name_final = file_name_aux[0] + '-Memory_' + str(func_mem) + '.' + file_name_aux[1]
-
-                    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name_final),
-                                           get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
+            file = (file_name_final, func_mem)
+            files.append(file)
 
 
 
-                    file = (file_name_final, func_mem)
-                    files.append(file)
-
-            print('Calculate the result...')
-            result_controller(test_number, files, ts, serverless_provider, execution_time)
-
-
-
-def run_weight_test(args):
-
-    serverless_provider = args[0].lower()
+def run_weight_test_short(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
     weights = get_computacional_weights(test_number)
 
-    print('Getting JMeter template...')
-    template = get_template(test_number)
-
-    if template == None:
-        print('No template for test founded!')
+    if test_number != "7":
         return None
 
-    ts = int(time.time())
+    files_provider = []
 
-    if serverless_provider == 'all' and test_number == "7":
+    for weight in weights:
+            function_url = function_url + '?n='+str(weight)
+            update_t1_template(function_url, execution_time, template,test_number)
+            file_name = get_output_file_name(ts, serverless_provider)
+            file_name_aux = file_name.split('.')
+            file_name_final = file_name_aux[0] + '-fib_' + str(weight) + '.' + file_name_aux[1]
+            jmeter_result = run_jmeter(get_template_path(test_number),
+                                       get_output_file(test_number, file_name_final),
+                                       get_jmeter_path(), serverless_provider, 'T' + test_number)
+            #print(str(jmeter_result.decode('UTF-8')))
 
-        files = []
+            file = (file_name_final, serverless_provider, weight)
+            files_provider.append(file)
 
-        for provider in get_all_providers(test_number):
-            serverless_provider = provider
-            files_provider = []
-
-            for weight in weights:
-                function_url = get_function_url(serverless_provider, test_number)
-                if function_url is None or function_url == "":
-                    print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-                    function_url = function_url + '?n='+str(weight)
-                    update_t1_template(function_url, execution_time, template,test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-fib_' + str(weight) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-                    file = (file_name_final, serverless_provider, weight)
-                    files_provider.append(file)
-
-            files.append(files_provider)
-
-        #print(files)
-
-        print('Calculate the result...')
-        result_controller(test_number, files, ts, "all", execution_time)
-
-    else:
-
-        if not verify_test_provider(test_number, serverless_provider):
-            print("The test is not specified for that provider")
-            return None;
-
-        if test_number == '7':
-            print('Updating Template for test...')
-            files = []
-            files_provider = []
-            for weight in weights:
-                function_url = get_function_url(serverless_provider, test_number)
-                if function_url is None or function_url == "":
-                    print("No function for test T" + test_number + " on " + serverless_provider + " provider")
-                    return None
-
-                else:
-                    function_url = function_url + '?n='+str(weight)
-                    update_t1_template(function_url, execution_time, template,test_number)
-                    file_name = get_output_file_name(ts, serverless_provider)
-                    file_name_aux = file_name.split('.')
-                    file_name_final = file_name_aux[0] + '-fib_' + str(weight) + '.' + file_name_aux[1]
-                    jmeter_result = run_jmeter(get_template_path(test_number),
-                                               get_output_file(test_number, file_name_final),
-                                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-                    #print(str(jmeter_result.decode('UTF-8')))
-
-
-                    file = (file_name_final, serverless_provider, weight)
-                    files_provider.append(file)
-            files.append(files_provider)
-
-            #print(files)
-
-            print('Calculate the result...')
-            result_controller(test_number, files, ts, serverless_provider, execution_time)
-
+    files.append(files_provider)
 
 
 def get_template(test_number):
