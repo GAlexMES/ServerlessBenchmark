@@ -12,39 +12,19 @@ def run_test(args):
     test_number = args[1]
 
     if test_number == '1':
-        run_testFun(run_overhead_test_short, args)
+        run_testFun(run_overhead_test, args)
     elif test_number == '2':
-        run_testFun(run_concurrency_test_short, args)
+        run_testFun(run_concurrency_test, args)
     elif test_number == '3':
-        run_testFun(run_container_reuse_test_short, args)
+        run_testFun(run_container_reuse_test, args)
     elif test_number == '4':
-        run_testFun(run_payload_test_short, args)
+        run_testFun(run_payload_test, args)
     elif test_number == '5':
-        run_testFun(run_overhead_languages_test_short, args)
+        run_testFun(run_overhead_languages_test, args)
     elif test_number == '6':
-        run_testFun(run_memory_test_short, args)
+        run_testFun(run_memory_test, args)
     elif test_number == '7':
         run_testFun(run_weight_test_short, args)
-
-
-def run_overhead_test_short(args, files, serverless_provider, function_url,  template, ts):
-    test_number = args[1]
-    execution_time = args[2]
-    print(args)
-
-    if test_number != '1':
-        return None
-
-    update_t1_template(function_url, execution_time, template, test_number)
-    file_name = get_output_file_name(ts, serverless_provider)
-    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name),
-                               get_jmeter_path(), serverless_provider, 'T' + test_number)
-    #print(str(jmeter_result.decode('UTF-8')))
-
-    file = (file_name, serverless_provider)
-    files.append(file)
-
-    return execution_time
 
 
 def run_testFun(testFun, args):
@@ -88,8 +68,26 @@ def run_testFun(testFun, args):
     result_name = 'all' if serverless_provider == 'all' else serverless_provider
     result_controller(test_number, files, ts, result_name, execution_time)
 
+def run_overhead_test(args, files, serverless_provider, function_url,  template, ts):
+    test_number = args[1]
+    execution_time = args[2]
+    print(args)
 
-def run_concurrency_test_short(args, files, serverless_provider, function_url, template, ts):
+    if test_number != '1':
+        return None
+
+    update_t1_template(function_url, execution_time, template, test_number)
+    file_name = get_output_file_name(ts, serverless_provider)
+    jmeter_result = run_jmeter(get_template_path(test_number), get_output_file(test_number, file_name),
+                               get_jmeter_path(), serverless_provider, 'T' + test_number)
+    #print(str(jmeter_result.decode('UTF-8')))
+
+    file = (file_name, serverless_provider)
+    files.append(file)
+
+    return execution_time
+
+def run_concurrency_test(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     min_concurrency = int(args[2])
     max_concurrency = int(args[3])
@@ -115,9 +113,10 @@ def run_concurrency_test_short(args, files, serverless_provider, function_url, t
         file = (file_name_final, serverless_provider, num_threads, throughput)
         files_provider.append(file)
     files.append(files_provider)
+    return execution_time
 
 
-def run_container_reuse_test_short(args, files, serverless_provider, function_url, template, ts):
+def run_container_reuse_test(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     min_wait_time = int(args[2])
     max_wait_time = int(args[3])
@@ -182,8 +181,9 @@ def run_container_reuse_test_short(args, files, serverless_provider, function_ur
         files_provider.append(file)
 
     files.append(files_provider)
+    return execution_time
 
-def run_payload_test_short(args, files, serverless_provider, function_url, template, ts):
+def run_payload_test(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
@@ -213,7 +213,7 @@ def run_payload_test_short(args, files, serverless_provider, function_url, templ
 
 
 
-def run_overhead_languages_test_short(args, files, serverless_provider, function, template, ts):
+def run_overhead_languages_test(args, files, serverless_provider, function, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
@@ -238,9 +238,10 @@ def run_overhead_languages_test_short(args, files, serverless_provider, function
 
             file = (file_name_final, prog_lang)
             files.append(file)
+    return execution_time
 
 
-def run_memory_test_short(args, files, serverless_provider, functions, template, ts):
+def run_memory_test(args, files, serverless_provider, functions, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
@@ -266,9 +267,9 @@ def run_memory_test_short(args, files, serverless_provider, functions, template,
             file = (file_name_final, func_mem)
             files.append(file)
 
+    return execution_time
 
-
-def run_weight_test_short(args, files, serverless_provider, function_url, template, ts):
+def run_weight_test(args, files, serverless_provider, function_url, template, ts):
     test_number = args[1]
     execution_time = args[2]
 
@@ -294,6 +295,7 @@ def run_weight_test_short(args, files, serverless_provider, function_url, templa
             files_provider.append(file)
 
     files.append(files_provider)
+    return execution_time
 
 
 def get_template(test_number):
