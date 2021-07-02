@@ -105,7 +105,7 @@ def run_concurrency_test(args: List[str], test: str, files: List, serverless_pro
         file_name = get_output_file_name(ts, serverless_provider)
         file_name_aux = file_name.split('.')
         file_name_final = create_final_file_name(file_name_aux[0], 'concurrency', str(num_threads), file_name_aux[1])
-        jmeter_result = run_jmeter(file_name, test, serverless_provider)
+        jmeter_result = run_jmeter(file_name_final, test, serverless_provider)
         # print(str(jmeter_result.decode('UTF-8')))
 
         throughput = get_running_data(str(jmeter_result.decode('UTF-8')))
