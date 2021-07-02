@@ -8,9 +8,14 @@ def main():
     parser = argparse.ArgumentParser(description="Serverless Benchmark Interface!")
 
     # defining arguments for parser object
-    parser.add_argument("-d", "--deploy", type=str, nargs=2,
-                        metavar=('serverless_provider', 'test_number'),
-                        help="Deploy in the provider all the functions that are needed for a specified test")
+    parser.add_argument(
+        "-d",
+        "--deploy",
+        type=str,
+        nargs=2,
+        metavar=("serverless_provider", "test_number"),
+        help="Deploy in the provider all the functions that are needed for a specified test",
+    )
 
     # parser.add_argument("-o", "--overhead", type=str, nargs=3,
     #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
@@ -48,12 +53,22 @@ def main():
     #                     help="Run in the provider all the functions that are needed for test  with different "
     #                          "computational weight levels")
 
-    parser.add_argument("-t", "--test", type=str, nargs='*',
-                         help="Run in the provider all the functions that are needed for the specified test")
+    parser.add_argument(
+        "-t",
+        "--test",
+        type=str,
+        nargs="*",
+        help="Run in the provider all the functions that are needed for the specified test",
+    )
 
-    parser.add_argument("-r", "--remove", type=str, nargs=2,
-                        metavar=('serverless_provider', 'test_number'),
-                        help="Remove from the provider all the functions that are needed for a specified test")
+    parser.add_argument(
+        "-r",
+        "--remove",
+        type=str,
+        nargs=2,
+        metavar=("serverless_provider", "test_number"),
+        help="Remove from the provider all the functions that are needed for a specified test",
+    )
 
     args = parser.parse_args()
 
@@ -81,7 +96,7 @@ def main():
     # if args.weightcomputacional != None:
     #     run_test(args.weightcomputacional)
 
-    if args.test!=None:
+    if args.test != None:
         run_test(args.test)
 
     if args.remove != None:

@@ -1,5 +1,6 @@
 /jmeter.log
 /venv/
 /KEYS
-/__pycache__/**
+**/__pycache__/**
 /conf.json
+/ResultsDirectory

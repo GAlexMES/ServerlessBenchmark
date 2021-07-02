@@ -1,15 +1,5 @@
 {
   "jMeterPath": "/usr/bin/",
-  "jMeterTemplates": {
-    "T1": "JMeterTemplates/T1/T1.jmx",
-    "T2": "JMeterTemplates/T2/T2.jmx",
-    "T3_0": "JMeterTemplates/T3/T3_0.jmx",
-    "T3_1": "JMeterTemplates/T3/T3_1.jmx",
-    "T4": "JMeterTemplates/T4/T4.jmx",
-    "T5": "JMeterTemplates/T5/T5.jmx",
-    "T6": "JMeterTemplates/T6/T6.jmx",
-    "T7": "JMeterTemplates/T7/T7.jmx"
-  },
   "jMeterResultsPath": {
     "T1": "ResultsDirectory/JMeterResults/T1",
     "T2": "ResultsDirectory/JMeterResults/T2",

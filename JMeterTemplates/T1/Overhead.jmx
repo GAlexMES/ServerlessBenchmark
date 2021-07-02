@@ -32,7 +32,7 @@
           <stringProp name="HTTPSampler.port" />
           <stringProp name="HTTPSampler.protocol" />
           <stringProp name="HTTPSampler.contentEncoding" />
-          <stringProp name="HTTPSampler.path">https://ks4hq6qsw3.execute-api.eu-central-1.amazonaws.com/hello</stringProp>
+          <stringProp name="HTTPSampler.path">https://ks4hq6qsw3.execute-api.eu-central-1.amazonaws.com/</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

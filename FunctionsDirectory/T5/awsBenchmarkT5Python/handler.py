@@ -2,14 +2,9 @@ import json
 
 
 def awsFunctionT5Python(event, context):
-    body = {
-        "message": "Hello, World!"
-    }
+    body = {"message": "Hello, World!"}
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
+    response = {"statusCode": 200, "body": json.dumps(body)}
 
     return response
 

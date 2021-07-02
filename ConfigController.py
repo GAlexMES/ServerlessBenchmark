@@ -3,14 +3,14 @@ import json
 
 def write_conf(conf):
 
-    with open('conf.json', 'w') as confifile:
+    with open("conf.json", "w") as confifile:
         json.dump(conf, confifile)
 
 
 def read_conf():
 
-    if file_check('conf.json'):
-        with open('conf.json') as json_file:
+    if file_check("conf.json"):
+        with open("conf.json") as json_file:
             data = json.load(json_file)
             return data
     return {}
