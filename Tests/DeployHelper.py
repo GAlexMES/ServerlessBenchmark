@@ -1,8 +1,6 @@
 import os
 import subprocess
 
-from IPython.core.inputtransformer import tr
-
 from ConfigController import *
 from Tests.FunctionInformation import FunctionInformation
 from Tests.IJMeterTest import IJMeterTest

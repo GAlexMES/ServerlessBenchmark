@@ -21,6 +21,8 @@ class MemoryTest(IJMeterTest):
     def get_test_name(self):
         return "T06MemoryTest"
 
+    # Todo deployment needs to be fied
+
     def run(
         self,
         args: List[str],
