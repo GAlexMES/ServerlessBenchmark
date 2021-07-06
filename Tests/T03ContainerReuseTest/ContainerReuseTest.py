@@ -4,12 +4,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
-from typing import List, Dict
 
-from Tests.DeployHelper import deploy_test_in_provider
-from Tests.IJMeterTest import IJMeterTest
+from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig
-from Tests.Provider import Provider
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -28,18 +25,11 @@ class ContainerReuseTest(IJMeterTest):
     def get_test_name(self):
         return "T03ContainerReuseTest"
 
-    def run(
-        self,
-        args: List[str],
-        files: List,
-        serverless_provider: str,
-        function_url: str or Dict[str, str],
-        ts: float,
-    ) -> str or None:
-        min_wait_time = int(args[2])
-        max_wait_time = int(args[3])
-        time_step = int(args[4])
-        execution_time = args[5]
+    def run(self, options: RunOptions) -> str or None:
+        min_wait_time = int(options.args[2])
+        max_wait_time = int(options.args[3])
+        time_step = int(options.args[4])
+        execution_time = options.args[5]
 
         files_provider = []
 
@@ -52,19 +42,15 @@ class ContainerReuseTest(IJMeterTest):
 
         print("Updating Template for test...")
 
-        update_t1_template(
-            function_url, execution_time, template, self.jmeter_template_0
-        )
-        file_name = get_output_file_name(ts, serverless_provider)
+        update_t1_template(options.function_url, execution_time, template, self.jmeter_template_0)
+        file_name = get_output_file_name(options.ts, options.provider.value)
         file_name_aux = file_name.split(".")
-        file_name_final = "{0}-{1}.{2}".format(
-            file_name_aux[0], "preexecution", file_name_aux[1]
-        )
+        file_name_final = "{0}-{1}.{2}".format(file_name_aux[0], "preexecution", file_name_aux[1])
 
         run_jmeter(
             file_name_final,
             self.get_test_name(),
-            serverless_provider,
+            options.provider.value,
             self.jmeter_template_0,
         )
 
@@ -78,35 +64,29 @@ class ContainerReuseTest(IJMeterTest):
         print("Updating Template for test...")
 
         for wait_time in range(min_wait_time, max_wait_time + 1, time_step):
-            info_tet = "\nRun test in {0} after waiting {1} seconds!\n".format(
-                serverless_provider, str(wait_time)
-            )
+            info_tet = "\nRun test in {0} after waiting {1} seconds!\n".format(options.provider.value, str(wait_time))
             print(info_tet)
 
             time.sleep(wait_time)
 
-            self.update_t3_template(
-                get_function_url(serverless_provider, self.get_test_name()), template
-            )
+            self.update_t3_template(get_function_url(options.provider.value, self.get_test_name()), template)
 
-            file_name = get_output_file_name(ts, serverless_provider)
+            file_name = get_output_file_name(options.ts, options.provider.value)
             file_name_aux = file_name.split(".")
-            file_name_final = create_final_file_name(
-                file_name_aux[0], "waittime", str(wait_time), file_name_aux[1]
-            )
+            file_name_final = create_final_file_name(file_name_aux[0], "waittime", str(wait_time), file_name_aux[1])
 
             run_jmeter(
                 file_name_final,
                 self.get_test_name(),
-                serverless_provider,
+                options.provider.value,
                 self.jmeter_template_1,
             )
             # print(str(jmeter_result.decode('UTF-8')))
 
-            file = (file_name_final, serverless_provider, wait_time)
+            file = (file_name_final, options.provider.value, wait_time)
             files_provider.append(file)
 
-        files.append(files_provider)
+        options.files.append(files_provider)
         return execution_time
 
     def update_t3_template(self, url: str, template: ElementTree):
@@ -118,20 +98,12 @@ class ContainerReuseTest(IJMeterTest):
 
         write_file(root, self.jmeter_template_1)
 
-    def plot(
-        self,
-        files: List,
-        execution_time: str,
-        colors: List[str],
-        result_path: str,
-        serverless_provider: str,
-        ts: float,
-    ):
+    def plot(self, options: PlotOptions):
         ax = plt.gca()
         provider = ""
         color_n = 0
 
-        for file in files:
+        for file in options.files:
             data = []
 
             for file_provider in file:
@@ -144,17 +116,11 @@ class ContainerReuseTest(IJMeterTest):
                     )
                 )
 
-                jmeter_file = (
-                    get_jmeter_result_path(self.get_test_name())
-                    + "/"
-                    + str(file_provider[0])
-                )
+                jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + str(file_provider[0])
                 df = pd.read_csv(jmeter_file)
 
                 print_result_infos(df)
-                data.append(
-                    {"waittime": int(wait_time) / 60, "avg": df["RealLatency"].mean()}
-                )
+                data.append({"waittime": int(wait_time) / 60, "avg": df["RealLatency"].mean()})
 
             data_frame = pd.DataFrame(data)
             ax.set_xticks(data_frame["waittime"])
@@ -165,7 +131,7 @@ class ContainerReuseTest(IJMeterTest):
                 kind="line",
                 y="avg",
                 x="waittime",
-                color=colors[color_n],
+                color=options.colors[color_n],
                 label=provider,
                 ax=ax,
             )
@@ -175,4 +141,4 @@ class ContainerReuseTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         # plt.title('Container Reuse Latency')
 
-        save_fig(plt, result_path, serverless_provider, ts)
+        save_fig(plt, options.result_path, options.provider.value, options.ts)

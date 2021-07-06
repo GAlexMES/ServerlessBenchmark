@@ -23,11 +23,7 @@ def run_test(jmeter_test: IJMeterTest, providers: List[Provider], args: List[str
         function_url = get_function_url(serverless_provider, test)
 
         if function_url is None or function_url == "":
-            print(
-                "No function deployed for test {0} on {1} provider".format(
-                    test, serverless_provider
-                )
-            )
+            print("No function deployed for test {0} on {1} provider".format(test, serverless_provider))
             continue
 
         test_execution_time = jmeter_test.run(args, files, provider.name, function_url, ts)
@@ -44,4 +40,3 @@ def get_all_providers(test: str) -> List[str]:
     config = read_conf()
     providers = config["providers"][test]
     return providers
-

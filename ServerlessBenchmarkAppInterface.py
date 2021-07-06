@@ -14,14 +14,14 @@ def main():
     parser.add_argument(
         "-d",
         "--deploy",
-        action='store_true',
+        action="store_true",
         help="Deploy in the provider all the functions that are needed for a specified test",
     )
 
     parser.add_argument(
         "-t",
         "--test",
-        action='store_true',
+        action="store_true",
         help="Run in the provider all the functions that are needed for the specified test",
     )
 
@@ -36,16 +36,11 @@ def main():
     parser.add_argument(
         "-r",
         "--remove",
-        action='store_true',
+        action="store_true",
         help="Remove from the provider all the functions that are needed for a specified test",
     )
 
-    parser.add_argument(
-        '-p',
-        "--provider",
-        type=str,
-        default="all",
-        help='provider that should be used')
+    parser.add_argument("-p", "--provider", type=str, default="all", help="provider that should be used")
 
     args = parser.parse_args()
 

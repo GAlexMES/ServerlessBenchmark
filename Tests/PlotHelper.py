@@ -1,3 +1,8 @@
+import pandas as pd
+
+from Tests.TestHelpers import get_jmeter_result_path
+
+
 def print_result_infos(df):
     df["RealLatency"] = df["elapsed"] - df["Connect"]
     print("Max Latency:", df["RealLatency"].max())
@@ -15,6 +20,21 @@ def print_result_infos(df):
         len(df[df["responseCode"] != 200]) / df["RealLatency"].count() * 100,
     )
     print("Number executions", df["RealLatency"].count())
+
+
+def plot_real_latency(color: str, label: str, ax, test_name, file_name):
+    jmeter_file = get_jmeter_result_path(test_name) + "/" + file_name
+    df = pd.read_csv(jmeter_file)
+
+    print_result_infos(df)
+    df.reset_index().plot(
+        kind="line",
+        y="RealLatency",
+        x="index",
+        color=color,
+        label=label,
+        ax=ax,
+    )
 
 
 def save_fig(plt, result_path: str, serverless_provider: str, ts: float):

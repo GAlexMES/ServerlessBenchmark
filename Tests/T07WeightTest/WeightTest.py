@@ -3,10 +3,8 @@ import xml.etree.ElementTree as ElementTree
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from Tests.DeployHelper import deploy_test_in_provider
-from Tests.IJMeterTest import IJMeterTest
+from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig
-from Tests.Provider import Provider
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -17,8 +15,6 @@ from Tests.TestHelpers import (
     get_jmeter_result_path,
 )
 
-from typing import List, Dict
-
 
 class WeightTest(IJMeterTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "Weight.jmx")
@@ -26,75 +22,47 @@ class WeightTest(IJMeterTest):
     def get_test_name(self):
         return "T07WeightTest"
 
-    def run(
-        self,
-        args: List[str],
-        files: List,
-        serverless_provider: str,
-        function_url: str or Dict[str, str],
-        ts: float,
-    ) -> str or None:
-        execution_time = args[2]
+    def run(self, options: RunOptions) -> str or None:
+        execution_time = options.args[2]
 
         weights = get_weights(self.get_test_name())
         files_provider = []
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
         for weight in weights:
-            function_url_appended = append_query_parameter(function_url, str(weight))
-            update_t1_template(
-                function_url_appended, execution_time, template, self.jmeter_template
-            )
-            file_name = get_output_file_name(ts, serverless_provider)
+            function_url_appended = append_query_parameter(options.function_url, str(weight))
+            update_t1_template(function_url_appended, execution_time, template, self.jmeter_template)
+            file_name = get_output_file_name(options.ts, options.provider.value)
             file_name_aux = file_name.split(".")
-            file_name_final = create_final_file_name(
-                file_name_aux[0], "fib", str(weight), file_name_aux[1]
-            )
+            file_name_final = create_final_file_name(file_name_aux[0], "fib", str(weight), file_name_aux[1])
             run_jmeter(
                 file_name_final,
                 self.get_test_name(),
-                serverless_provider,
+                options.provider.value,
                 self.jmeter_template,
             )
             # print(str(jmeter_result.decode('UTF-8')))
 
-            file = (file_name_final, serverless_provider, weight)
+            file = (file_name_final, options.provider.value, weight)
             files_provider.append(file)
 
-        files.append(files_provider)
+        options.files.append(files_provider)
         return execution_time
 
-    def plot(
-        self,
-        files: List,
-        execution_time: str,
-        colors: List[str],
-        result_path: str,
-        serverless_provider: str,
-        ts: float,
-    ):
+    def plot(self, options: PlotOptions):
         ax = plt.gca()
         provider = ""
         color_n = 0
-        for file in files:
+        for file in options.files:
             data = []
 
             for file_provider in file:
-                df = None
                 provider = file_provider[1]
                 weight = file_provider[2]
 
-                print(
-                    "\n\nResult for test T {0} in the {1} provider with N of Fibonacci = {2}:".format(
-                        self.get_test_name(), provider, str(weight)
-                    )
-                )
+                print("\n\nResult for test T {0} in the {1} provider with N of Fibonacci = {2}:".format(self.get_test_name(), provider, str(weight)))
 
-                jmeter_file = (
-                    get_jmeter_result_path(self.get_test_name())
-                    + "/"
-                    + str(file_provider[0])
-                )
+                jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + str(file_provider[0])
                 df = pd.read_csv(jmeter_file)
 
                 print_result_infos(df)
@@ -109,7 +77,7 @@ class WeightTest(IJMeterTest):
                 kind="line",
                 y="avg",
                 x="n_of_fib",
-                color=colors[color_n],
+                color=options.colors[color_n],
                 label=provider,
                 ax=ax,
             )
@@ -117,10 +85,6 @@ class WeightTest(IJMeterTest):
 
         plt.xlabel("N of sequence of fibonacci ")
         plt.ylabel("Latency (ms)")
-        plt.title(
-            "Average latency for Fibonacci recursive during {0} seconds".format(
-                execution_time
-            )
-        )
+        plt.title("Average latency for Fibonacci recursive during {0} seconds".format(options.execution_time))
 
-        save_fig(plt, result_path, serverless_provider, ts)
+        save_fig(plt, options.result_path, options.provider.value, options.ts)

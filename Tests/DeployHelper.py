@@ -17,17 +17,17 @@ def deploy_test_in_providers(providers: List[Provider], test: IJMeterTest):
 def deploy_test_in_provider(provider: Provider, functions_info: List[FunctionInformation], test: IJMeterTest):
     for function_info in functions_info:
         serverless_deploy_response = deploy(function_info.path, provider)
-        function_url = get_function_url(provider, serverless_deploy_response, function_info.url, test.get_test_name())
+        function_url = get_function_url(
+            provider,
+            serverless_deploy_response,
+            function_info.url,
+            test.get_test_name(),
+        )
         if function_url is not None:
             test.save_function_url(provider.value, function_url, function_info.detail)
-            print(
-                "Function(s) for specified test is deployed with success on AWS!\nThe url of function is: "
-                + function_url
-            )
+            print("Function(s) for specified test is deployed with success on AWS!\nThe url of function is: " + function_url)
         else:
-            print(
-                "Error deploying:\n {0}".format(str(serverless_deploy_response.decode("UTF-8")))
-            )
+            print("Error deploying:\n {0}".format(str(serverless_deploy_response.decode("UTF-8"))))
 
 
 def deploy(function_path: str, provider: Provider):

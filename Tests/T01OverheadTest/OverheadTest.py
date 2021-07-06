@@ -1,21 +1,15 @@
 import os
 
 import matplotlib.pyplot as plt
-import pandas as pd
 import xml.etree.ElementTree as ElementTree
 
-from Tests.DeployHelper import deploy_test_in_provider
-from Tests.IJMeterTest import IJMeterTest
-from Tests.PlotHelper import print_result_infos, save_fig
-from Tests.Provider import Provider
+from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
+from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
     run_jmeter,
-    get_jmeter_result_path,
 )
-
-from typing import List, Dict
 
 
 class OverheadTest(IJMeterTest):
@@ -25,76 +19,36 @@ class OverheadTest(IJMeterTest):
     def get_test_name(self):
         return "T01OverheadTest"
 
-    def run(
-        self,
-        args: List[str],
-        files: List,
-        serverless_provider: str,
-        function_url: str or Dict[str, str],
-        ts: float,
-    ) -> str or None:
-        test_number = args[1]
-        execution_time = args[2]
+    def run(self, options: RunOptions) -> str or None:
+        execution_time = options.args[2]
 
-        if test_number != "1":
-            return None
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
-        update_t1_template(function_url, execution_time, template, self.jmeter_template)
-        file_name = get_output_file_name(ts, serverless_provider)
+        update_t1_template(options.function_url, execution_time, template, self.jmeter_template)
+        file_name = get_output_file_name(options.ts, options.provider.value)
 
-        run_jmeter(
-            file_name, self.get_test_name(), serverless_provider, self.jmeter_template
-        )
+        run_jmeter(file_name, self.get_test_name(), options.provider.value, self.jmeter_template)
         # print(str(jmeter_result.decode('UTF-8')))
 
-        file = (file_name, serverless_provider)
-        files.append(file)
+        file = (file_name, options.provider.value)
+        options.files.append(file)
 
         return execution_time
 
-    def plot(
-        self,
-        files: List,
-        execution_time: str,
-        colors: List[str],
-        result_path: str,
-        serverless_provider: str,
-        ts: float,
-    ):
+    def plot(self, options: PlotOptions):
         color_n = 0
         ax = plt.gca()
-        for file in files:
+        for file in options.files:
             provider = file[1]
-            print(
-                "\n\n\n Result for test T {0} in the {1} provider during {2} seconds:".format(
-                    self.get_test_name(), provider, execution_time
-                )
-            )
-
-            jmeter_file = (
-                get_jmeter_result_path(self.get_test_name()) + "/" + str(file[0])
-            )
-            df = pd.read_csv(jmeter_file)
-            print_result_infos(df)
-
             if provider == "ow":
                 provider = "ibm bluemix"
 
-            df.reset_index().plot(
-                kind="line",
-                y="RealLatency",
-                x="index",
-                color=colors[color_n],
-                label=provider,
-                ax=ax,
-            )
+            print("\n\n\n Result for test T {0} in the {1} provider during {2} seconds:".format(self.get_test_name(), provider, options.execution_time))
+            plot_real_latency(options.colors[color_n], provider, ax, self.get_test_name(), str(file[0]))
             color_n += 1
 
         plt.xlabel("Function Invocation Sequence Number")
         plt.ylabel("Latency (ms)")
-        plt.title(
-            "Latency of a sequence of invocations during " + execution_time + " seconds"
-        )
+        plt.title("Latency of a sequence of invocations during {0} seconds".format(options.execution_time))
 
-        save_fig(plt, result_path, serverless_provider, ts)
+        save_fig(plt, options.result_path, options.provider.value, options.ts)

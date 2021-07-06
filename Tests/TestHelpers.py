@@ -13,9 +13,7 @@ def get_function_url(serverless_provider: str, test: str):
     return config["functionsURL"][serverless_provider][test]
 
 
-def create_final_file_name(
-    file_name: str, test_name: str, addition: str, ending: str
-) -> str:
+def create_final_file_name(file_name: str, test_name: str, addition: str, ending: str) -> str:
     return "{0}-{1}_{2}.{3}".format(file_name, test_name, addition, ending)
 
 
@@ -23,9 +21,7 @@ def append_query_parameter(url: str, appendix: str) -> str:
     return "{0}?n={1}".format(url, appendix)
 
 
-def update_t1_template(
-    url: str, execution_time: str, template: ElementTree, file_path: str
-):
+def update_t1_template(url: str, execution_time: str, template: ElementTree, file_path: str):
     root = template.getroot()
 
     for elem in template.iter():
@@ -38,9 +34,7 @@ def update_t1_template(
     write_file(root, file_path)
 
 
-def update_t2_template(
-    url: str, execution_time: str, template: ElementTree, file_path: str, n_threads: int
-):
+def update_t2_template(url: str, execution_time: str, template: ElementTree, file_path: str, n_threads: int):
     root = template.getroot()
 
     for elem in template.iter():
@@ -66,9 +60,7 @@ def get_output_file_name(ts: float, serverless_provider: str):
 
 def get_output_file(test: str, file_name: str) -> str:
     config = read_conf()
-    file_path = "{0}/{1}/{2}".format(
-        str(os.getcwd()), str(config["jMeterResultsPath"][test]), file_name
-    )
+    file_path = "{0}/{1}/{2}".format(str(os.getcwd()), str(config["jMeterResultsPath"][test]), file_name)
     print("Generated file with results:" + file_path)
     return file_path
 
