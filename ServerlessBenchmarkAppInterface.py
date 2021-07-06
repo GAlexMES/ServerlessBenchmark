@@ -2,6 +2,9 @@ import argparse
 
 from DeployController import *
 from TestController import *
+from Tests.DeployHelper import deploy_test_in_providers
+from Tests.TestRegistry import get_function_for_number
+from Tests.Provider import Provider
 
 
 def main():
@@ -11,96 +14,58 @@ def main():
     parser.add_argument(
         "-d",
         "--deploy",
-        type=str,
-        nargs=2,
-        metavar=("serverless_provider", "test_number"),
+        action='store_true',
         help="Deploy in the provider all the functions that are needed for a specified test",
     )
-
-    # parser.add_argument("-o", "--overhead", type=str, nargs=3,
-    #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
-    #                     help="Run in the provider all the functions that are needed for a overhead(latency) "
-    #                          "specified test")
-    #
-    # parser.add_argument("-c", "--concurrency", type=str, nargs=6,
-    #                     metavar=('serverless_provider', 'test_number', 'min_concurrency', 'max_concurrency',
-    #                              'concurrency_step', 'level_concurrency_execution_time'),
-    #                     help="Run in the provider all the functions that are needed for a concurrency"
-    #                          " specified test")
-    #
-    # parser.add_argument("-b", "--backoff", type=str, nargs=6,
-    #                     metavar=('serverless_provider', 'test_number', 'min_wait_time', 'max_wait_time',
-    #                              'time_step', 'pre_exec_time'),
-    #                     help="Run in the provider all the functions that are needed for a container reuse"
-    #                          " specified test")
-    #
-    # parser.add_argument("-p", "--payload", type=str, nargs=3,
-    #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
-    #                     help="Run in the provider all the functions that are needed for payload size test")
-    #
-    # parser.add_argument("-l", "--language", type=str, nargs=3,
-    #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
-    #                     help="Run in the provider all the functions that are needed for test  with different "
-    #                          "programming languages")
-    #
-    # parser.add_argument("-m", "--memory", type=str, nargs=3,
-    #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
-    #                     help="Run in the provider all the functions that are needed for test  with different "
-    #                          "memory levels")
-    #
-    # parser.add_argument("-w", "--weightcomputacional", type=str, nargs=3,
-    #                     metavar=('serverless_provider', 'test_number', 'execution_time'),
-    #                     help="Run in the provider all the functions that are needed for test  with different "
-    #                          "computational weight levels")
 
     parser.add_argument(
         "-t",
         "--test",
-        type=str,
-        nargs="*",
+        action='store_true',
+        help="Run in the provider all the functions that are needed for the specified test",
+    )
+
+    parser.add_argument(
+        "-s",
+        "--suite",
+        type=int,
+        required=True,
         help="Run in the provider all the functions that are needed for the specified test",
     )
 
     parser.add_argument(
         "-r",
         "--remove",
-        type=str,
-        nargs=2,
-        metavar=("serverless_provider", "test_number"),
+        action='store_true',
         help="Remove from the provider all the functions that are needed for a specified test",
     )
 
+    parser.add_argument(
+        '-p',
+        "--provider",
+        type=str,
+        default="all",
+        help='provider that should be used')
+
     args = parser.parse_args()
 
-    if args.deploy != None:
-        deploy_functions(args)
+    providers = [Provider.aws, Provider.azure, Provider.ow, Provider.google]
+    if args.provider is not None and args.provider != "all":
+        providers = [Provider[args.provider]]
 
-    # if args.overhead != None:
-    #     run_test(args.overhead)
-    #
-    # if args.concurrency!=None:
-    #     run_test(args.concurrency)
-    #
-    # if args.backoff!=None:
-    #     run_test(args.backoff)
-    #
-    # if args.payload!=None:
-    #     run_test(args.payload)
-    #
-    # if args.language != None:
-    #     run_test(args.language)
-    #
-    # if args.memory != None:
-    #     run_test(args.memory)
-    #
-    # if args.weightcomputacional != None:
-    #     run_test(args.weightcomputacional)
+    if args.suite is None:
+        print("No test suite defined")
 
-    if args.test != None:
-        run_test(args.test)
+    test = get_function_for_number(args.suite)
 
-    if args.remove != None:
-        remove_functions(args.remove)
+    if args.deploy is not None and args.deploy:
+        deploy_test_in_providers(providers, test)
+
+    if args.test is not None and args.test:
+        run_test(test, providers, args.test)
+
+    if args.remove is not None and args.remove:
+        remove_functions(args.remove, test)
 
 
 if __name__ == "__main__":

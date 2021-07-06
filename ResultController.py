@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from typing import List
 
-from JMeterTemplates.IJMeterTest import IJMeterTest
+from Tests.IJMeterTest import IJMeterTest
 
 plt.rcParams.update({"font.size": 14})
 plt.rcParams["font.family"] = "Arial"
@@ -31,18 +31,17 @@ colors = [
 
 def plot_result(
     jmeter_test: IJMeterTest,
-    test_number: str,
     files: List,
     ts: float,
     serverless_provider: str,
     execution_time: str,
 ):
-    result_path = benchmark_result_path(test_number)
+    result_path = benchmark_result_path(jmeter_test.get_test_name())
     jmeter_test.plot(
-        test_number, files, execution_time, colors, result_path, serverless_provider, ts
+        files, execution_time, colors, result_path, serverless_provider, ts
     )
 
 
 def benchmark_result_path(test_number):
     config = read_conf()
-    return str(config["benchmarkResultsPath"]["T" + test_number])
+    return str(config["benchmarkResultsPath"][test_number])

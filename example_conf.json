@@ -1,41 +1,41 @@
 {
   "jMeterPath": "/usr/bin/",
   "jMeterResultsPath": {
-    "T1": "ResultsDirectory/JMeterResults/T1",
-    "T2": "ResultsDirectory/JMeterResults/T2",
-    "T3": "ResultsDirectory/JMeterResults/T3",
-    "T4": "ResultsDirectory/JMeterResults/T4",
-    "T5": "ResultsDirectory/JMeterResults/T5",
-    "T6": "ResultsDirectory/JMeterResults/T6",
-    "T7": "ResultsDirectory/JMeterResults/T7"
+    "T01OverheadTest": "ResultsDirectory/JMeterResults/T01OverheadTest",
+    "T02ConcurrencyTest": "ResultsDirectory/JMeterResults/T02ConcurrencyTest",
+    "T03ContainerReuseTest": "ResultsDirectory/JMeterResults/T03ContainerReuseTest",
+    "T04PayloadTest": "ResultsDirectory/JMeterResults/T04PayloadTest",
+    "T05OverheadLanguagesTest": "ResultsDirectory/JMeterResults/T05OverheadLanguagesTest",
+    "T06MemoryTest": "ResultsDirectory/JMeterResults/T06MemoryTest",
+    "T07WeightTest": "ResultsDirectory/JMeterResults/T07WeightTest"
   },
   "benchmarkResultsPath": {
-    "T1": "ResultsDirectory/BenchmarkResults/T1",
-    "T2": "ResultsDirectory/BenchmarkResults/T2",
-    "T3": "ResultsDirectory/BenchmarkResults/T3",
-    "T4": "ResultsDirectory/BenchmarkResults/T4",
-    "T5": "ResultsDirectory/BenchmarkResults/T5",
-    "T6": "ResultsDirectory/BenchmarkResults/T6",
-    "T7": "ResultsDirectory/BenchmarkResults/T7"
+    "T01OverheadTest": "ResultsDirectory/BenchmarkResults/T01OverheadTest",
+    "T02ConcurrencyTest": "ResultsDirectory/BenchmarkResults/T02ConcurrencyTest",
+    "T03ContainerReuseTest": "ResultsDirectory/BenchmarkResults/T03ContainerReuseTest",
+    "T04PayloadTest": "ResultsDirectory/BenchmarkResults/T04PayloadTest",
+    "T05OverheadLanguagesTest": "ResultsDirectory/BenchmarkResults/T05OverheadLanguagesTest",
+    "T06MemoryTest": "ResultsDirectory/BenchmarkResults/T06MemoryTest",
+    "T07WeightTest": "ResultsDirectory/BenchmarkResults/T07WeightTest"
   },
   "googleFunctions": {
-    "T1": {
+    "01OverheadTest": {
       "function": "gFunctionT1",
       "service": "gbenchmarkt1"
     },
-    "T2": {
+    "02ConcurrencyTest": {
       "function": "gFunctionT2",
       "service": "gbenchmarkt2"
     },
-    "T3": {
+    "03ContainerReuseTest": {
       "function": "gFunctionT3",
       "service": "gbenchmarkt3"
     },
-    "T4": {
+    "04PayloadTest": {
       "function": "gFunctionT4",
       "service": "gbenchmarkt4"
     },
-    "T6": {
+    "06MemoryTest": {
       "128": {
         "function": "gFunctionT6M128",
         "service": "gbenchmarkt6m128"
@@ -57,174 +57,174 @@
         "service": "gbenchmarkt6m2048"
       }
     },
-    "T7": {
+    "07WeightTest": {
       "function": "gFunctionT7",
       "service": "gbenchmarkt7"
     }
   },
   "functionsURL": {
     "ow": {
-      "T1": "",
-      "T2": "",
-      "T3": "",
-      "T4": "",
-      "T5": {
+      "T01OverheadTest": "",
+      "T02ConcurrencyTest": "",
+      "T03ContainerReuseTest": "",
+      "T04PayloadTest": "",
+      "T05OverheadLanguagesTest": {
         "NodeJs": "",
         "Python": "",
         "Swift": "",
         "Ruby": "",
         "Php": ""
       },
-      "T6": {
+      "T06MemoryTest": {
         "512": ""
         },
-      "T7": ""
+      "T07WeightTest": ""
     },
     "azure": {
-      "T1": "",
-      "T2": "",
-      "T3": "",
-      "T4": "",
-      "T7": ""
+      "T01OverheadTest": "",
+      "T02ConcurrencyTest": "",
+      "T03ContainerReuseTest": "",
+      "T04PayloadTest": "",
+      "T07WeightTest": ""
     },
     "google": {
-      "T1": "",
-      "T2": "",
-      "T3": "",
-      "T4": "",
-      "T6": {
+      "T01OverheadTest": "",
+      "T02ConcurrencyTest": "",
+      "T03ContainerReuseTest": "",
+      "T04PayloadTest": "",
+      "T06MemoryTest": {
         "128": "",
         "256": "",
         "512": "",
         "1024": "",
         "2048": ""
       },
-      "T7": ""
+      "T07WeightTest": ""
     },
     "aws": {
-      "T1": "",
-      "T2": "",
-      "T3": "",
-      "T4": "",
-      "T5": {
+      "T01OverheadTest": "",
+      "T02ConcurrencyTest": "",
+      "T03ContainerReuseTest": "",
+      "T04PayloadTest": "",
+      "T05OverheadLanguagesTest": {
         "NodeJs": "",
         "Python": "",
         "Go": "",
         "Java": ""
       },
-      "T6": {
+      "T06MemoryTest": {
         "128": "",
         "256": "",
         "512": "",
         "1024": "",
         "2048": ""
       },
-      "T7": ""
+      "T07WeightTest": ""
     }
   },
   "functionsPath": {
     "ow": {
-      "T1": "FunctionsDirectory/T1/owBenchmarkT1",
-      "T2": "FunctionsDirectory/T2/owBenchmarkT2",
-      "T3": "FunctionsDirectory/T3/owBenchmarkT3",
-      "T4": "FunctionsDirectory/T4/owBenchmarkT4",
-      "T5": {
-        "NodeJs": "FunctionsDirectory/T5/owBenchmarkT5NodeJs",
-        "Python": "FunctionsDirectory/T5/owBenchmarkT5Python",
-        "Swift": "FunctionsDirectory/T5/owBenchmarkT5Swift",
-        "Ruby": "FunctionsDirectory/T5/owBenchmarkT5Ruby",
-        "Php": "FunctionsDirectory/T5/owBenchmarkT5Php"
+      "01OverheadTest": "FunctionsDirectory/01OverheadTest/owBenchmark",
+      "02ConcurrencyTest": "FunctionsDirectory/02ConcurrencyTest/owBenchmark",
+      "03ContainerReuseTest": "FunctionsDirectory/03ContainerReuseTest/owBenchmark",
+      "04PayloadTest": "FunctionsDirectory/04PayloadTest/owBenchmark",
+      "05OverheadLanguagesTest": {
+        "NodeJs": "FunctionsDirectory/05OverheadLanguagesTest/owBenchmarkNodeJs",
+        "Python": "FunctionsDirectory/05OverheadLanguagesTest/owBenchmarkPython",
+        "Swift": "FunctionsDirectory/05OverheadLanguagesTest/owBenchmarkSwift",
+        "Ruby": "FunctionsDirectory/05OverheadLanguagesTest/owBenchmarkRuby",
+        "Php": "FunctionsDirectory/05OverheadLanguagesTest/owBenchmarkPhp"
       },
-      "T6": {
-        "128": "FunctionsDirectory/T6/owBenchmarkT6M128",
-        "256": "FunctionsDirectory/T6/owBenchmarkT6M256",
-        "384": "FunctionsDirectory/T6/owBenchmarkT6M384",
-        "512": "FunctionsDirectory/T6/owBenchmarkT6M512"
+      "06MemoryTest": {
+        "128": "FunctionsDirectory/06MemoryTest/owBenchmarkM128",
+        "256": "FunctionsDirectory/06MemoryTest/owBenchmarkM256",
+        "384": "FunctionsDirectory/06MemoryTest/owBenchmarkM384",
+        "512": "FunctionsDirectory/06MemoryTest/owBenchmarkM512"
       },
-      "T7": "FunctionsDirectory/T7/owBenchmarkT7"
+      "07WeightTest": "FunctionsDirectory/07WeightTest/owBenchmark"
     },
     "azure": {
-      "T1": "FunctionsDirectory/T1/aBenchmarkT1",
-      "T2": "FunctionsDirectory/T2/aBenchmarkT2",
-      "T3": "FunctionsDirectory/T3/aBenchmarkT3",
-      "T4": "FunctionsDirectory/T4/aBenchmarkT4",
-      "T7": "FunctionsDirectory/T7/aBenchmarkT7"
+      "01OverheadTest": "FunctionsDirectory/01OverheadTest/aBenchmark",
+      "02ConcurrencyTest": "FunctionsDirectory/02ConcurrencyTest/aBenchmark",
+      "03ContainerReuseTest": "FunctionsDirectory/03ContainerReuseTest/aBenchmark",
+      "04PayloadTest": "FunctionsDirectory/04PayloadTest/aBenchmark",
+      "07WeightTest": "FunctionsDirectory/07WeightTest/aBenchmark"
     },
     "google": {
-      "T1": "FunctionsDirectory/T1/gBenchmarkT1",
-      "T2": "FunctionsDirectory/T2/gBenchmarkT2",
-      "T3": "FunctionsDirectory/T3/gBenchmarkT3",
-      "T4": "FunctionsDirectory/T4/gBenchmarkT4",
-      "T6": {
-        "128": "FunctionsDirectory/T6/gBenchmarkT6M128",
-        "256": "FunctionsDirectory/T6/gBenchmarkT6M256",
-        "512": "FunctionsDirectory/T6/gBenchmarkT6M512",
-        "1024": "FunctionsDirectory/T6/gBenchmarkT6M1024",
-        "2048": "FunctionsDirectory/T6/gBenchmarkT6M2048"
+      "01OverheadTest": "FunctionsDirectory/01OverheadTest/gBenchmark",
+      "02ConcurrencyTest": "FunctionsDirectory/02ConcurrencyTest/gBenchmark",
+      "03ContainerReuseTest": "FunctionsDirectory/03ContainerReuseTest/gBenchmark",
+      "04PayloadTest": "FunctionsDirectory/04PayloadTest/gBenchmark",
+      "06MemoryTest": {
+        "128": "FunctionsDirectory/06MemoryTest/gBenchmarkM128",
+        "256": "FunctionsDirectory/06MemoryTest/gBenchmarkM256",
+        "512": "FunctionsDirectory/06MemoryTest/gBenchmarkM512",
+        "1024": "FunctionsDirectory/06MemoryTest/gBenchmarkM1024",
+        "2048": "FunctionsDirectory/06MemoryTest/gBenchmarkM2048"
       },
-      "T7": "FunctionsDirectory/T7/gBenchmarkT7"
+      "07WeightTest": "FunctionsDirectory/07WeightTest/gBenchmark"
     },
     "aws": {
-      "T1": "FunctionsDirectory/T2/awsBenchmarkT1",
-      "T2": "FunctionsDirectory/T2/awsBenchmarkT2",
-      "T3": "FunctionsDirectory/T3/awsBenchmarkT3",
-      "T4": "FunctionsDirectory/T4/awsBenchmarkT4",
-      "T5": {
-        "NodeJs": "FunctionsDirectory/T5/awsBenchmarkT5NodeJs",
-        "Python": "FunctionsDirectory/T5/awsBenchmarkT5Python",
-        "Go": "FunctionsDirectory/T5/awsBenchmarkT5Go",
-        "Java": "FunctionsDirectory/T5/awsBenchmarkT5Java"
+      "01OverheadTest": "FunctionsDirectory/01OverheadTest/awsBenchmark",
+      "02ConcurrencyTest": "FunctionsDirectory/02ConcurrencyTest/awsBenchmark",
+      "03ContainerReuseTest": "FunctionsDirectory/03ContainerReuseTest/awsBenchmark",
+      "04PayloadTest": "FunctionsDirectory/04PayloadTest/awsBenchmark",
+      "05OverheadLanguagesTest": {
+        "NodeJs": "FunctionsDirectory/05OverheadLanguagesTest/awsBenchmarkNodeJs",
+        "Python": "FunctionsDirectory/05OverheadLanguagesTest/awsBenchmarkPython",
+        "Go": "FunctionsDirectory/05OverheadLanguagesTest/awsBenchmarkGo",
+        "Java": "FunctionsDirectory/05OverheadLanguagesTest/awsBenchmarkT5Java"
       },
-      "T6": {
-        "128": "FunctionsDirectory/T6/awsBenchmarkT6M128",
-        "256": "FunctionsDirectory/T6/awsBenchmarkT6M256",
-        "512": "FunctionsDirectory/T6/awsBenchmarkT6M512",
-        "1024": "FunctionsDirectory/T6/awsBenchmarkT6M1024",
-        "2048": "FunctionsDirectory/T6/awsBenchmarkT6M2048"
+      "06MemoryTest": {
+        "128": "FunctionsDirectory/06MemoryTest/awsBenchmarkM128",
+        "256": "FunctionsDirectory/06MemoryTest/awsBenchmarkM256",
+        "512": "FunctionsDirectory/06MemoryTest/awsBenchmarkM512",
+        "1024": "FunctionsDirectory/06MemoryTest/awsBenchmarkM1024",
+        "2048": "FunctionsDirectory/06MemoryTest/awsBenchmarkM2048"
       },
-      "T7": "FunctionsDirectory/T7/awsBenchmarkT7"
+      "07WeightTest": "FunctionsDirectory/07WeightTest/awsBenchmark"
     }
   },
   "azureFunctions": {
-    "T1": {
+    "T01OverheadTest": {
       "function": "aFunctionT1",
       "service": "aBenchmarkT1"
     },
-    "T2": {
+    "T02ConcurrencyTest": {
       "function": "aFunctionT2",
       "service": "aBenchmarkT2"
     },
-    "T3": {
+    "T03ContainerReuseTest": {
       "function": "aFunctionT3",
       "service": "aBenchmarkT3"
     },
-    "T4": {
+    "T04PayloadTest": {
       "function": "aFunctionT4",
       "service": "aBenchmarkT4"
     },
-    "T7": {
+    "T07WeightTest": {
       "function": "aFunctionT7",
       "service": "aBenchmarkT7"
     }
   },
   "owFunctions": {
-    "T1": {
+    "T01OverheadTest": {
       "function": "owFunctionT1",
       "service": "owBenchmarkT1"
     },
-    "T2": {
+    "T02ConcurrencyTest": {
       "function": "owFunctionT2",
       "service": "owBenchmarkT2"
     },
-    "T3": {
+    "T03ContainerReuseTest": {
       "function": "owFunctionT3",
       "service": "owBenchmarkT3"
     },
-    "T4": {
+    "T04PayloadTest": {
       "function": "owFunctionT4",
       "service": "owBenchmarkT4"
     },
-    "T5": {
+    "T05OverheadLanguagesTest": {
       "NodeJs": {
         "function": "owFunctionT5NodeJs",
         "service": "owBenchmarkT5NodeJs"
@@ -246,7 +246,7 @@
         "service": "owBenchmarkT5Php"
       }
     },
-    "T6": {
+    "T06MemoryTest": {
       "128": {
         "function": "owFunctionT6M128",
         "service": "owBenchmarkT6M128"
@@ -264,29 +264,29 @@
         "service": "owBenchmarkT6M512"
       }
     },
-    "T7": {
+    "T07WeightTest": {
       "function": "owFunctionT7",
       "service": "owBenchmarkT7"
     }
   },
   "awsFunctions": {
-    "T1": {
+    "T01OverheadTest": {
       "function": "awsFunctionT1",
       "service": "awsBenchmarkT1"
     },
-    "T2": {
+    "T02ConcurrencyTest": {
       "function": "awsFunctionT2",
       "service": "awsBenchmarkT2"
     },
-    "T3": {
+    "T03ContainerReuseTest": {
       "function": "awsFunctionT3",
       "service": "awsBenchmarkT3"
     },
-    "T4": {
+    "T04PayloadTest": {
       "function": "awsFunctionT4",
       "service": "awsBenchmarkT4"
     },
-    "T5": {
+    "T05OverheadLanguagesTest": {
       "NodeJs": {
         "function": "awsFunctionT5NodeJs",
         "service": "awsBenchmarkT5NodeJs"
@@ -304,7 +304,7 @@
         "service": "awsBenchmarkT5Java"
       }
     },
-    "T6": {
+    "T06MemoryTest": {
       "128": {
         "function": "awsFunctionT6M128",
         "service": "awsBenchmarkT6M128"
@@ -326,53 +326,53 @@
         "service": "awsBenchmarkT6M2048"
       }
     },
-    "T7": {
+    "T07WeightTest": {
       "function": "awsFunctionT7",
       "service": "awsBenchmarkT7"
     }
   },
   "providers": {
-    "T1": [
+    "T01OverheadTest": [
       "ow",
       "azure",
       "google",
       "aws"
     ],
-    "T2": [
+    "T02ConcurrencyTest": [
       "ow",
       "azure",
       "google",
       "aws"
     ],
-    "T3": [
+    "T03ContainerReuseTest": [
       "ow",
       "azure",
       "google",
       "aws"
     ],
-    "T4": [
+    "T04PayloadTest": [
       "ow",
       "azure",
       "google",
       "aws"
     ],
-    "T5": [
+    "T05OverheadLanguagesTest": [
       "ow",
       "aws"
     ],
-    "T6": [
+    "T06MemoryTest": [
       "ow",
       "aws",
       "google"
     ],
-    "T7": [
+    "T07WeightTest": [
       "ow",
       "azure",
       "google",
       "aws"
     ]
   },
-  "T4PayloadSize": [
+  "T04PayloadTestPayloadSize": [
     0,
     32,
     64,
@@ -383,7 +383,7 @@
     224,
     256
   ],
-  "T7Weights": [
+  "T07WeightTestWeights": [
     0,
     5,
     10,
