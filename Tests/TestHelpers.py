@@ -109,7 +109,7 @@ def get_running_data(result_data: str) -> str:
             return info[0].split(" ")[-1]
 
 
-def get_jmeter_result_path(test_number):
+def get_jmeter_result_path(test: str):
     config = read_conf()
-    file_path = str(config["jMeterResultsPath"]["T" + test_number])
+    file_path = str(config["jMeterResultsPath"][test])
     return file_path

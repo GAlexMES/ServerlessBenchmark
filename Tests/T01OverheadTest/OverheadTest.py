@@ -20,7 +20,7 @@ class OverheadTest(IJMeterTest):
         return "T01OverheadTest"
 
     def run(self, options: RunOptions) -> str or None:
-        execution_time = options.args[2]
+        execution_time = self.arguments[0]
 
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
@@ -55,4 +55,4 @@ class OverheadTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         plt.title("Latency of a sequence of invocations during {0} seconds".format(options.execution_time))
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

@@ -112,4 +112,4 @@ class ConcurrencyTest(IJMeterTest):
         ax2.legend(frameon=True, loc="center left", ncol=1)
         # plt.legend()
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

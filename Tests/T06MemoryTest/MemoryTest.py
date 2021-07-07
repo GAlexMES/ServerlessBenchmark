@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ElementTree
 
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions, IJMeterOptionalTest
+from Tests.IJMeterTest import  PlotOptions, RunOptions, IJMeterOptionalTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
 from Tests.TestHelpers import (
@@ -27,7 +27,7 @@ class MemoryTest(IJMeterOptionalTest):
         return "T06MemoryTest"
 
     def run(self, options: RunOptions) -> str or None:
-        execution_time = options.args[2]
+        execution_time = self.arguments[0]
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
         for func_mem, url in options.function_url.items():
@@ -65,7 +65,7 @@ class MemoryTest(IJMeterOptionalTest):
             print(
                 "\n\n\nResult for test T {0} in the {1} provider during {2} seconds, with {3} of memory of function:".format(
                     self.get_test_name(),
-                    options.provider.value,
+                    options.provider,
                     options.execution_time,
                     memory,
                 )
@@ -81,4 +81,4 @@ class MemoryTest(IJMeterOptionalTest):
             )
         )
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

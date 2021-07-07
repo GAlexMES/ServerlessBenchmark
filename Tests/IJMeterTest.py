@@ -14,13 +14,12 @@ class PlotOptions:
     execution_time: str
     colors: List[str]
     result_path: str
-    provider: Provider
+    provider: str
     ts: float
 
 
 @dataclass
 class RunOptions:
-    args: List[str]
     files: List
     provider: Provider
     function_url: str or Dict[str, str]
@@ -29,9 +28,15 @@ class RunOptions:
 
 class IJMeterTest:
     supported_providers = [Provider.aws, Provider.ow, Provider.azure, Provider.google]
+    required_arguments_count = 1
+    arguments: List[str] or None
 
     def is_test_applicable_for_provider(self, provider: Provider):
         return provider in self.supported_providers
+
+    def set_arguments(self, options: List[str] or None) -> bool:
+        self.arguments = options
+        return (options is None and self.required_arguments_count == 0) or len(options) == self.required_arguments_count
 
     def save_function_url(self, provider: str, url: str, appendix: str = None):
         config = read_conf()

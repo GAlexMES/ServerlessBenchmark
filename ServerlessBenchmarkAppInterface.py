@@ -39,6 +39,14 @@ def main():
         help="Remove from the provider all the functions that are needed for a specified test",
     )
 
+    parser.add_argument(
+        "-o",
+        "--options",
+        type=str,
+        nargs="*",
+        help="Run in the provider all the functions that are needed for the specified test",
+    )
+
     parser.add_argument("-p", "--provider", type=str, default="all", help="provider that should be used")
 
     args = parser.parse_args()
@@ -52,11 +60,18 @@ def main():
 
     test = get_function_for_number(args.suite)
 
+    if not test.set_arguments(args.options):
+        print(
+            "The options {0} do not have the right amount of arguments for {1}"
+                .format(args.options, test.get_test_name())
+        )
+        return
+
     if args.deploy is not None and args.deploy:
         deploy_test_in_providers(providers, test)
 
     if args.test is not None and args.test:
-        run_test(test, providers, args.test)
+        run_test(test, providers)
 
     if args.remove is not None and args.remove:
         remove_from_providers(providers, test)

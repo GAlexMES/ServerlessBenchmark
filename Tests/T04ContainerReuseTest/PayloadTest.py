@@ -92,4 +92,4 @@ class PayloadTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         # plt.title('Average latency for payload size during '+str(execution_time)+' seconds')
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

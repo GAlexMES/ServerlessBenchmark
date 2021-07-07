@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ElementTree
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import  PlotOptions, RunOptions, IJMeterOptionalTest
+from Tests.IJMeterTest import PlotOptions, RunOptions, IJMeterOptionalTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
 from Tests.TestHelpers import (
@@ -26,7 +26,7 @@ class OverheadLanguagesTest(IJMeterOptionalTest):
         return "T05OverheadLanguagesTest"
 
     def run(self, options: RunOptions) -> str or None:
-        execution_time = options.args[2]
+        execution_time = self.arguments[0]
 
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
@@ -68,7 +68,7 @@ class OverheadLanguagesTest(IJMeterOptionalTest):
             print(
                 "\n\n\n Result for test T {0} in the {1} provider during {2} seconds, with {3} as programming language of function:".format(
                     self.get_test_name(),
-                    options.provider.value,
+                    options.provider,
                     options.execution_time,
                     language,
                 )
@@ -84,4 +84,4 @@ class OverheadLanguagesTest(IJMeterOptionalTest):
             )
         )
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

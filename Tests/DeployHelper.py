@@ -51,24 +51,28 @@ def deploy(function_path: str, provider: Provider):
     print("Deploy function in {0}".format(function_path))
     install(function_path)
     build(function_path)
-    if provider == Provider.google:
-        aux = subprocess.check_output(
-            ["serverless", "deploy", "-v", "--region", "europe-west1"],
-            cwd=function_path,
-        )
-    else:
-        aux = subprocess.check_output(
-            ["serverless", "deploy", "-v"],
-            stderr=subprocess.STDOUT,
-            cwd=function_path,
-        )
+    try:
+        if provider == Provider.google:
+            return subprocess.check_output(
+                ["serverless", "deploy", "-v", "--region", "europe-west1"],
+                cwd=function_path,
+            )
+        else:
+            return subprocess.check_output(
+                ["serverless", "deploy", "-v"],
+                stderr=subprocess.STDOUT,
+                cwd=function_path,
+            )
 
-    return aux
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError("command {0} return with error (code {1}): {2}".format(e.cmd, e.returncode, e.output))
 
 
 def remove(function_path):
-    aux = subprocess.check_output(["serverless", "remove"], cwd=function_path)
-    return aux
+    try:
+        return subprocess.check_output(["serverless", "remove"], cwd=function_path)
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError("command {0} return with error (code {1}): {2}".format(e.cmd, e.returncode, e.output))
 
 
 def install(function_path: str):

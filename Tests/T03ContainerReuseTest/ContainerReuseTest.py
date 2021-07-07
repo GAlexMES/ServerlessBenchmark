@@ -133,4 +133,4 @@ class ContainerReuseTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         # plt.title('Container Reuse Latency')
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)

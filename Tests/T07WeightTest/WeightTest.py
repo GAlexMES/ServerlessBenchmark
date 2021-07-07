@@ -23,7 +23,7 @@ class WeightTest(IJMeterTest):
         return "T07WeightTest"
 
     def run(self, options: RunOptions) -> str or None:
-        execution_time = options.args[2]
+        execution_time = self.arguments[0]
 
         weights = get_weights(self.get_test_name())
         files_provider = []
@@ -91,4 +91,4 @@ class WeightTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         plt.title("Average latency for Fibonacci recursive during {0} seconds".format(options.execution_time))
 
-        save_fig(plt, options.result_path, options.provider.value, options.ts)
+        save_fig(plt, options.result_path, options.provider, options.ts)
