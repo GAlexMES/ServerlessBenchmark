@@ -1,8 +1,7 @@
 import argparse
 
-from DeployController import *
 from TestController import *
-from Tests.DeployHelper import deploy_test_in_providers
+from Tests.DeployHelper import deploy_test_in_providers, remove_from_providers
 from Tests.TestRegistry import get_function_for_number
 from Tests.Provider import Provider
 
@@ -60,7 +59,7 @@ def main():
         run_test(test, providers, args.test)
 
     if args.remove is not None and args.remove:
-        remove_functions(args.remove, test)
+        remove_from_providers(providers, test)
 
 
 if __name__ == "__main__":

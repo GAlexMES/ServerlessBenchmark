@@ -1,9 +1,11 @@
 import os
 import xml.etree.ElementTree as ElementTree
+
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
+from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions, IJMeterOptionalTest
 from Tests.PlotHelper import save_fig, plot_real_latency
+from Tests.Provider import Provider
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -12,13 +14,17 @@ from Tests.TestHelpers import (
 )
 
 
-class MemoryTest(IJMeterTest):
+class MemoryTest(IJMeterOptionalTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "Memory.jmx")
+    supported_providers = [Provider.aws, Provider.ow, Provider.google]
+    options = {
+        Provider.aws: ["M128", "M256", "M512", "M1024", "M2048"],
+        Provider.google: ["M128", "M256", "M512", "M1024", "M2048"],
+        Provider.ow: ["M128", "M256", "M384", "M512"],
+    }
 
     def get_test_name(self):
         return "T06MemoryTest"
-
-    # Todo deployment needs to be fied
 
     def run(self, options: RunOptions) -> str or None:
         execution_time = options.args[2]
@@ -26,7 +32,11 @@ class MemoryTest(IJMeterTest):
 
         for func_mem, url in options.function_url.items():
             if url is None or url == "":
-                print("No function with {0}Mb of memory for test {1} on {2} provider".format(func_mem, self.get_test_name(), options.provider.value))
+                print(
+                    "No function with {0}Mb of memory for test {1} on {2} provider".format(
+                        func_mem, self.get_test_name(), options.provider.value
+                    )
+                )
                 return None
 
             else:
@@ -42,8 +52,6 @@ class MemoryTest(IJMeterTest):
                     options.provider.value,
                     self.jmeter_template,
                 )
-                # print(str(jmeter_result.decode('UTF-8')))
-
                 file = (file_name_final, func_mem)
                 options.files.append(file)
 
@@ -67,6 +75,10 @@ class MemoryTest(IJMeterTest):
 
         plt.xlabel("Function Invocation Sequence Number")
         plt.ylabel("Latency (ms)")
-        plt.title("Latency of a sequence of invocations with different memory levels during {0} seconds".format(options.execution_time))
+        plt.title(
+            "Latency of a sequence of invocations with different memory levels during {0} seconds".format(
+                options.execution_time
+            )
+        )
 
         save_fig(plt, options.result_path, options.provider.value, options.ts)

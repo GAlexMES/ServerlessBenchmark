@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
-from Tests.PlotHelper import print_result_infos, save_fig
+from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -70,7 +70,9 @@ class PayloadTest(IJMeterTest):
                 print("\n\n")
 
                 print(
-                    "Result for test T {0} in the {1} provider with payload size = {2} kb".format(self.get_test_name(), provider, str(payload_size))
+                    "Result for test T {0} in the {1} provider with payload size = {2} kb".format(
+                        self.get_test_name(), provider, str(payload_size)
+                    )
                 )
                 jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + str(file_provider[0])
                 df = pd.read_csv(jmeter_file)
@@ -82,15 +84,7 @@ class PayloadTest(IJMeterTest):
             # ax.set_xticks(data_frame['payloadsize'])
             if provider == "ow":
                 provider = "ibm bluemix"
-            data_frame.reset_index().plot(
-                marker="o",
-                kind="line",
-                y="avg",
-                x="payloadsize",
-                color=options.colors[color_n],
-                label=provider,
-                ax=ax,
-            )
+            plot_data_frame(data_frame, "avg", "payloadsize", options.colors[color_n], provider, ax)
             color_n += 1
 
         execution_time = 900

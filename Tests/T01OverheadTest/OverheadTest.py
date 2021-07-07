@@ -43,7 +43,11 @@ class OverheadTest(IJMeterTest):
             if provider == "ow":
                 provider = "ibm bluemix"
 
-            print("\n\n\n Result for test T {0} in the {1} provider during {2} seconds:".format(self.get_test_name(), provider, options.execution_time))
+            print(
+                "\n\n\n Result for test T {0} in the {1} provider during {2} seconds:".format(
+                    self.get_test_name(), provider, options.execution_time
+                )
+            )
             plot_real_latency(options.colors[color_n], provider, ax, self.get_test_name(), str(file[0]))
             color_n += 1
 

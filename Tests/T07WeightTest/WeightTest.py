@@ -60,7 +60,11 @@ class WeightTest(IJMeterTest):
                 provider = file_provider[1]
                 weight = file_provider[2]
 
-                print("\n\nResult for test T {0} in the {1} provider with N of Fibonacci = {2}:".format(self.get_test_name(), provider, str(weight)))
+                print(
+                    "\n\nResult for test T {0} in the {1} provider with N of Fibonacci = {2}:".format(
+                        self.get_test_name(), provider, str(weight)
+                    )
+                )
 
                 jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + str(file_provider[0])
                 df = pd.read_csv(jmeter_file)

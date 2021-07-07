@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import xml.etree.ElementTree as ElementTree
 
-from Tests.IJMeterTest import IJMeterTest, PlotOptions
-from Tests.PlotHelper import print_result_infos, save_fig
+from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
+from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.TestHelpers import (
     get_output_file_name,
     run_jmeter,
@@ -14,8 +14,6 @@ from Tests.TestHelpers import (
     update_t2_template,
     get_running_data,
 )
-
-from typing import List, Dict
 
 
 class ConcurrencyTest(IJMeterTest):
@@ -43,7 +41,9 @@ class ConcurrencyTest(IJMeterTest):
             )
             file_name = get_output_file_name(options.ts, options.provider.value)
             file_name_aux = file_name.split(".")
-            file_name_final = create_final_file_name(file_name_aux[0], "concurrency", str(num_threads), file_name_aux[1])
+            file_name_final = create_final_file_name(
+                file_name_aux[0], "concurrency", str(num_threads), file_name_aux[1]
+            )
             jmeter_result = run_jmeter(
                 file_name_final,
                 self.get_test_name(),
@@ -95,25 +95,12 @@ class ConcurrencyTest(IJMeterTest):
             # print(pd.DataFrame(data))
             if provider == "ow":
                 provider = "ibm bluemix"
-            data_frame.plot(
-                marker="o",
-                kind="line",
-                y="avg",
-                x="concurrency",
-                color=options.colors[color_n],
-                label=provider + " Latency",
-                ax=ax1,
-            )
+
+            label = "{0} Latency".format(provider)
+            plot_data_frame(data_frame, "avg", "concurrency", options.colors[color_n], label, ax1)
             color_n += 1
-            data_frame.plot(
-                marker="o",
-                kind="line",
-                y="throughput",
-                x="concurrency",
-                color=options.colors[color_n],
-                label=provider + " Throughput",
-                ax=ax2,
-            )
+            label = "{0} Throughput".format(provider)
+            plot_data_frame(data_frame, "throughput", "concurrency", options.colors[color_n], label, ax2)
             color_n += 1
 
         ax1.set_ylabel("Average Latency (ms)")

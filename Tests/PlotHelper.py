@@ -27,10 +27,15 @@ def plot_real_latency(color: str, label: str, ax, test_name, file_name):
     df = pd.read_csv(jmeter_file)
 
     print_result_infos(df)
-    df.reset_index().plot(
+    plot_data_frame(df.reset_index(), "RealLatency", "index", color, label, ax)
+
+
+def plot_data_frame(data_frame, y, x, color, label, ax):
+    data_frame.plot(
+        marker="o",
         kind="line",
-        y="RealLatency",
-        x="index",
+        y=x,
+        x=y,
         color=color,
         label=label,
         ax=ax,

@@ -41,25 +41,36 @@ Run `pipenv install` in the root of this directory.
 
 First you need to creat a `conf.json` file in the root of this repository. You can copy/rename the `example_conf.json` for that.
 Run a test by executing the AppInterface with python 3.
-This would run the first test, which is the Overhead Test:
 
-`python ServerlessBenchmarkAppInterface.py -t aws 1 90`
+The most important arguments are:
+
+1. `-s or --suite` to define, which test suite should be executed
+2. `-p or --provider` to define the provider. Default is all providers
+3. `-d or --deploy` to deploy the functions for the test suite
+4. `-t or --test` to execute the test itself   
+4. `-r or --remove` to remove the deployed functions for the test suite
+
+This would deploy, run and remove the first test, which is the Overhead Test on AWS:
+
+`python ServerlessBenchmarkAppInterface.py -t -d -r -p aws -s 1 90`
+
+The last parameter is the execution time. It is test specific for the Overhead Test.
+Other test specific arguments are explained below
 
 ## Other Tests and their arguments
 
 ## Overhead
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 1 execution_time
+ServerlessBenchmarkAppInterface.py -s 1 execution_time
 ```
 
-where serverless_provider is the provider;  
-and execution_time is the amount of time the test should last.
+where execution_time is the amount of time the test should last.
 
 ## Concurrency Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 2 min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
+ServerlessBenchmarkAppInterface.py -s 2 min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
 ```
 
 where min_concurrency is the starting level of concurrency;  
@@ -70,7 +81,7 @@ and level_concurrency_execution_time is the time the tool spends on each concurr
 ## Container Reuse Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 3 min_wait_time max_wait_time time_step pre_execution_time
+ServerlessBenchmarkAppInterface.py -s 3 min_wait_time max_wait_time time_step pre_execution_time
 ```
 
 where min_wait_time is the first interval of waiting time between invocations;  
@@ -81,37 +92,33 @@ and re_execution_time is a warm-up time with invocations before the actual test,
 ## Payload Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 4 execution_time
+ServerlessBenchmarkAppInterface.py -s 4 execution_time
 ```
 
-where serverless_provider is the provider;  
-and execution_time is the amount of time the test should last.
+where execution_time is the amount of time the test should last.
 
 
 ## Overhead Language Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 5 execution_time
+ServerlessBenchmarkAppInterface.py -s 5 execution_time
 ```
 
-where serverless_provider is the provider;  
-and execution_time is the amount of time the test should last.
+where execution_time is the amount of time the test should last.
 
 ## Memory Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 6 execution_time
+ServerlessBenchmarkAppInterface.py -s 6 execution_time
 ```
 
-where serverless_provider is the provider;  
-and execution_time is the amount of time the test should last.
+where execution_time is the amount of time the test should last.
 
 ## Weight Test
 
 ```
-ServerlessBenchmarkAppInterface.py -t serverless_provider 7 execution_time
+ServerlessBenchmarkAppInterface.py -s 7 execution_time
 ```
 
-where serverless_provider is the provider;  
-and execution_time is the amount of time the test should last.
+where execution_time is the amount of time the test should last.
        

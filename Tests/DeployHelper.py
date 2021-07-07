@@ -2,7 +2,6 @@ import os
 import subprocess
 
 from ConfigController import *
-from Tests.FunctionInformation import FunctionInformation
 from Tests.IJMeterTest import IJMeterTest
 from Tests.Provider import Provider
 from typing import List
@@ -10,11 +9,11 @@ from typing import List
 
 def deploy_test_in_providers(providers: List[Provider], test: IJMeterTest):
     for provider in providers:
-        function_paths = test.get_function_paths(provider)
-        deploy_test_in_provider(provider, function_paths, test)
+        deploy_test_in_provider(provider, test)
 
 
-def deploy_test_in_provider(provider: Provider, functions_info: List[FunctionInformation], test: IJMeterTest):
+def deploy_test_in_provider(provider: Provider, test: IJMeterTest):
+    functions_info = test.get_function_information(provider)
     for function_info in functions_info:
         serverless_deploy_response = deploy(function_info.path, provider)
         function_url = get_function_url(
@@ -23,11 +22,29 @@ def deploy_test_in_provider(provider: Provider, functions_info: List[FunctionInf
             function_info.url,
             test.get_test_name(),
         )
+
         if function_url is not None:
             test.save_function_url(provider.value, function_url, function_info.detail)
-            print("Function(s) for specified test is deployed with success on AWS!\nThe url of function is: " + function_url)
+            print(
+                "Function(s) for specified test is deployed with success on AWS!\nThe url of function is: {0}".format(
+                    function_url
+                )
+            )
         else:
             print("Error deploying:\n {0}".format(str(serverless_deploy_response.decode("UTF-8"))))
+
+
+def remove_from_providers(providers: List[Provider], test: IJMeterTest):
+    for provider in providers:
+        remove_from_provider(provider, test)
+
+
+def remove_from_provider(provider: Provider, test: IJMeterTest):
+    print("Removing function(s) for test {0} of provider {1}".format(test.get_test_name(), provider.value))
+    functions_info = test.get_function_information(provider)
+    for function_info in functions_info:
+        remove(function_info.path)
+        test.save_function_url(provider.value, "", function_info.detail)
 
 
 def deploy(function_path: str, provider: Provider):
@@ -46,6 +63,11 @@ def deploy(function_path: str, provider: Provider):
             cwd=function_path,
         )
 
+    return aux
+
+
+def remove(function_path):
+    aux = subprocess.check_output(["serverless", "remove"], cwd=function_path)
     return aux
 
 

@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
-
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig
 from Tests.TestHelpers import (
@@ -126,15 +125,8 @@ class ContainerReuseTest(IJMeterTest):
             ax.set_xticks(data_frame["waittime"])
             if provider == "ow":
                 provider = "ibm bluemix"
-            data_frame.reset_index().plot(
-                marker="o",
-                kind="line",
-                y="avg",
-                x="waittime",
-                color=options.colors[color_n],
-                label=provider,
-                ax=ax,
-            )
+
+            plot_data_frame(data_frame, "avg", "waittime", options.colors[color_n], provider, ax)
             color_n += 1
 
         plt.xlabel("Time Since Last Execution (min)")
