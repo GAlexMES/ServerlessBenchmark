@@ -5,7 +5,7 @@ import pandas as pd
 import time
 
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
-from Tests.PlotHelper import print_result_infos, save_fig
+from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -21,14 +21,16 @@ class ContainerReuseTest(IJMeterTest):
     jmeter_template_0 = os.path.join(os.path.dirname(__file__), "ContainerReuse_0.jmx")
     jmeter_template_1 = os.path.join(os.path.dirname(__file__), "ContainerReuse_1.jmx")
 
+    required_arguments_count = 4
+
     def get_test_name(self):
         return "T03ContainerReuseTest"
 
     def run(self, options: RunOptions) -> str or None:
-        min_wait_time = int(options.args[2])
-        max_wait_time = int(options.args[3])
-        time_step = int(options.args[4])
-        execution_time = options.args[5]
+        min_wait_time = int(self.arguments[0])
+        max_wait_time = int(self.arguments[1])
+        time_step = int(self.arguments[2])
+        execution_time = self.arguments[3]
 
         files_provider = []
 

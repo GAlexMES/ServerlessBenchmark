@@ -10,7 +10,6 @@ from Tests.TestHelpers import (
     get_output_file_name,
     run_jmeter,
     create_final_file_name,
-    get_payload_size,
     append_query_parameter,
     get_jmeter_result_path,
 )
@@ -19,23 +18,23 @@ from Tests.TestHelpers import (
 class PayloadTest(IJMeterTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "Payload.jmx")
 
+    payload_sizes = [0, 32, 64, 96, 128, 160, 192, 224, 256]
+
     def get_test_name(self):
         return "T04PayloadTest"
 
     def run(self, options: RunOptions) -> str or None:
-        execution_time = options.args[2]
-        payload_size = get_payload_size(self.get_test_name())
+        execution_time = self.arguments[0]
         files_provider = []
-
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
-        for pay_size in payload_size:
+        for pay_size in self.payload_sizes:
             function_url_with_pay_size = append_query_parameter(options.function_url, str(pay_size))
             update_t1_template(
                 function_url_with_pay_size,
                 execution_time,
                 template,
-                self.get_test_name(),
+                self.jmeter_template,
             )
             file_name = get_output_file_name(options.ts, options.provider.value)
             file_name_aux = file_name.split(".")
@@ -45,7 +44,7 @@ class PayloadTest(IJMeterTest):
             run_jmeter(
                 file_name_final,
                 self.get_test_name(),
-                options.provider.valueserverless_provider,
+                options.provider.value,
                 self.jmeter_template,
             )
             # print(str(jmeter_result.decode('UTF-8')))
@@ -87,7 +86,6 @@ class PayloadTest(IJMeterTest):
             plot_data_frame(data_frame, "avg", "payloadsize", options.colors[color_n], provider, ax)
             color_n += 1
 
-        execution_time = 900
         plt.xlabel("Payload Size (KBytes)")
         plt.ylabel("Latency (ms)")
         # plt.title('Average latency for payload size during '+str(execution_time)+' seconds')

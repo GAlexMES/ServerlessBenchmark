@@ -24,7 +24,7 @@ def print_result_infos(df):
     print("Number executions", df["RealLatency"].count())
 
 
-def plot_real_latency(color: str, label: str, ax, test_name:str , file_name:str):
+def plot_real_latency(color: str, label: str, ax, test_name: str, file_name: str):
     jmeter_file = get_jmeter_result_path(test_name) + "/" + file_name
     df = pd.read_csv(jmeter_file)
 

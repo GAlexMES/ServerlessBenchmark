@@ -1,9 +1,8 @@
-class FunctionInformation:
-    path = None
-    url = None
-    detail = None
+from dataclasses import dataclass
 
-    def __init__(self, path, url, detail=None):
-        self.path = path
-        self.url = url
-        self.detail = detail
+
+@dataclass
+class FunctionInformation:
+    path:str
+    url: str or None
+    detail:str or None

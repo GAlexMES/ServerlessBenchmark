@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ElementTree
 
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import  PlotOptions, RunOptions, IJMeterOptionalTest
+from Tests.IJMeterTest import PlotOptions, RunOptions, IJMeterOptionalTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
 from Tests.TestHelpers import (

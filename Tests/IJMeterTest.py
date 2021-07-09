@@ -52,7 +52,7 @@ class IJMeterTest:
         function_path = os.path.join(os.path.dirname(__file__), function_dir)
         function_package_name = config["{0}Functions".format(provider.name)][self.get_test_name()]
         function_url = "{0}".format(function_package_name["function"])
-        function_info = FunctionInformation(function_path, function_url)
+        function_info = FunctionInformation(function_path, function_url, None)
         return [function_info]
 
     def run(self, options: RunOptions) -> str or None:

@@ -3,7 +3,6 @@ import os
 
 import xml.etree.ElementTree as ElementTree
 
-from typing import List
 
 from ConfigController import read_conf
 
@@ -23,14 +22,13 @@ def append_query_parameter(url: str, appendix: str) -> str:
 
 def update_t1_template(url: str, execution_time: str, template: ElementTree, file_path: str):
     root = template.getroot()
-
     for elem in template.iter():
         name = elem.attrib.get("name")
         if name == "ThreadGroup.duration":
             elem.text = execution_time
         elif name == "HTTPSampler.path":
             elem.text = url
-
+    print()
     write_file(root, file_path)
 
 
@@ -59,8 +57,7 @@ def get_output_file_name(ts: float, serverless_provider: str):
 
 
 def get_output_file(test: str, file_name: str) -> str:
-    config = read_conf()
-    file_path = "{0}/{1}/{2}".format(str(os.getcwd()), str(config["jMeterResultsPath"][test]), file_name)
+    file_path = "{0}/{1}/{2}".format(str(os.getcwd()), get_jmeter_result_path(test), file_name)
     print("Generated file with results:" + file_path)
     return file_path
 
@@ -88,18 +85,6 @@ def run_jmeter(
     return aux
 
 
-def get_payload_size(test: str) -> List[int]:
-    config = read_conf()
-    test_number_f = "{0}PayloadSize".format(test)
-    return config[test_number_f]
-
-
-def get_weights(test: str) -> List[int]:
-    config = read_conf()
-    test_number_f: str = "{0}Weights".format(test)
-    return config[test_number_f]
-
-
 def get_running_data(result_data: str) -> str:
     aux = result_data.split("\n")
 
@@ -111,5 +96,4 @@ def get_running_data(result_data: str) -> str:
 
 def get_jmeter_result_path(test: str):
     config = read_conf()
-    file_path = str(config["jMeterResultsPath"][test])
-    return file_path
+    return "{0}/{1}".format(str(config["jMeterResultsPath"]), test)

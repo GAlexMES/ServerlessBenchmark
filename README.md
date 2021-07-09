@@ -62,7 +62,7 @@ Other test specific arguments are explained below
 ## Overhead
 
 ```
-ServerlessBenchmarkAppInterface.py -s 1 execution_time
+ServerlessBenchmarkAppInterface.py -s 1 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -70,7 +70,7 @@ where execution_time is the amount of time the test should last.
 ## Concurrency Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 2 min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
+ServerlessBenchmarkAppInterface.py -s 2 -o min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
 ```
 
 where min_concurrency is the starting level of concurrency;  
@@ -81,7 +81,7 @@ and level_concurrency_execution_time is the time the tool spends on each concurr
 ## Container Reuse Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 3 min_wait_time max_wait_time time_step pre_execution_time
+ServerlessBenchmarkAppInterface.py -s 3 -o min_wait_time max_wait_time time_step pre_execution_time
 ```
 
 where min_wait_time is the first interval of waiting time between invocations;  
@@ -92,7 +92,7 @@ and re_execution_time is a warm-up time with invocations before the actual test,
 ## Payload Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 4 execution_time
+ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -101,7 +101,7 @@ where execution_time is the amount of time the test should last.
 ## Overhead Language Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 5 execution_time
+ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -109,7 +109,7 @@ where execution_time is the amount of time the test should last.
 ## Memory Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 6 execution_time
+ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -117,7 +117,7 @@ where execution_time is the amount of time the test should last.
 ## Weight Test
 
 ```
-ServerlessBenchmarkAppInterface.py -s 7 execution_time
+ServerlessBenchmarkAppInterface.py -s 7 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.

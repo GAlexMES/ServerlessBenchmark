@@ -3,6 +3,6 @@ from enum import Enum
 
 class Provider(Enum):
     aws = "aws"
-    azure = "a"
+    azure = "azure"
     ow = "ow"
-    google = "g"
+    google = "google"

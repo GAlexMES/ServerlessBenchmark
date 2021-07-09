@@ -20,7 +20,7 @@
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">900</stringProp>
+        <stringProp name="ThreadGroup.duration">90</stringProp>
         <stringProp name="ThreadGroup.delay" />
       </ThreadGroup>
       <hashTree>
@@ -32,7 +32,7 @@
           <stringProp name="HTTPSampler.port" />
           <stringProp name="HTTPSampler.protocol" />
           <stringProp name="HTTPSampler.contentEncoding" />
-          <stringProp name="HTTPSampler.path">https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/c5d7f0b58e6a5e9a95d219b29f2f08f1b9f79a8af720a2eeeda986b7b082dd81/owBenchmarkT5Php/owFunctionT5Php</stringProp>
+          <stringProp name="HTTPSampler.path">https://of0e4q83zf.execute-api.eu-west-2.amazonaws.com/dev/awsFunctionT5Java</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

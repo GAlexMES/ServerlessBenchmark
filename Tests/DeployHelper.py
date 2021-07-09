@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-from ConfigController import *
 from Tests.IJMeterTest import IJMeterTest
 from Tests.Provider import Provider
 from typing import List
@@ -16,12 +15,7 @@ def deploy_test_in_provider(provider: Provider, test: IJMeterTest):
     functions_info = test.get_function_information(provider)
     for function_info in functions_info:
         serverless_deploy_response = deploy(function_info.path, provider)
-        function_url = get_function_url(
-            provider,
-            serverless_deploy_response,
-            function_info.url,
-            test.get_test_name(),
-        )
+        function_url = get_function_url(serverless_deploy_response,)
 
         if function_url is not None:
             test.save_function_url(provider.value, function_url, function_info.detail)
@@ -70,7 +64,7 @@ def deploy(function_path: str, provider: Provider):
 
 def remove(function_path):
     try:
-        return subprocess.check_output(["serverless", "remove"], cwd=function_path)
+        return subprocess.check_output(["serverless", "remove", "--force"], cwd=function_path)
     except subprocess.CalledProcessError as e:
         raise RuntimeError("command {0} return with error (code {1}): {2}".format(e.cmd, e.returncode, e.output))
 
@@ -97,26 +91,14 @@ def build(function_path: str):
         )
 
 
-def get_function_url(provider: Provider, serverless_response, package_and_name, function_name):
-    if provider == Provider.azure:
-        return get_azure_function_url(serverless_response, package_and_name, function_name)
-
-    aux2 = str(serverless_response.decode("UTF-8")).split("\n")
-    for line in aux2:
-        if package_and_name in line:
+def get_function_url(serverless_response):
+    aux = str(serverless_response.decode("UTF-8")).split("\n")
+    for line in aux:
+        if "GET - " in line:
             return line.split()[2]
+        if "azurewebsites.net/" in line and "->" in line and "https" not in line:
+            return "https://{0}".format(line.split()[4])
 
     return None
 
 
-def get_azure_function_url(serverless_response, package_and_name, function_name):
-
-    aux2 = str(serverless_response.decode("UTF-8")).split("\n")
-
-    for line in aux2:
-        if "Error" in aux2:
-            return None
-
-    config = read_conf()
-    function_name = config["azureFunctions"][function_name]["function"].lower()
-    return "https://" + function_name + ".azurewebsites.net/api/" + package_and_name

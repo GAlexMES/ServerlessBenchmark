@@ -18,15 +18,16 @@ from Tests.TestHelpers import (
 
 class ConcurrencyTest(IJMeterTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "Concurrency.jmx")
+    required_arguments_count = 4
 
     def get_test_name(self):
         return "T02ConcurrencyTest"
 
     def run(self, options: RunOptions) -> str or None:
-        min_concurrency = int(options.args[2])
-        max_concurrency = int(options.args[3])
-        concurrency_step = int(options.args[4])
-        execution_time = options.args[5]
+        min_concurrency = int(self.arguments[0])
+        max_concurrency = int(self.arguments[1])
+        concurrency_step = int(self.arguments[2])
+        execution_time = self.arguments[3]
 
         files_provider = []
 

@@ -42,6 +42,6 @@ def plot_result(
     jmeter_test.plot(PlotOptions(files, execution_time, colors, result_path, result_name, ts))
 
 
-def benchmark_result_path(test_number):
+def benchmark_result_path(test: str) -> str:
     config = read_conf()
-    return str(config["benchmarkResultsPath"][test_number])
+    return "{0}/{1}".format(str(config["benchmarkResultsPath"]), test)

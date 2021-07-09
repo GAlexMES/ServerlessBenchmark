@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: aFunctionT1 # NOTE: update this with your service name
+service: aFunctionT4 # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -19,6 +19,7 @@ service: aFunctionT1 # NOTE: update this with your service name
 
 provider:
   name: azure
+  runtime: nodejs12
   location: UK West
 
 plugins:
@@ -34,12 +35,12 @@ plugins:
 #    - exclude-me-dir/**
 
 functions:
-  aFunctionT1:
-    handler: handler.aFunctionT1
+  aFunctionT4:
+    handler: handler.aFunctionT4
     events:
       - http: true
         x-azure-settings:
-          route: aBenchmarkT1/aFunctionT1
+          route: aBenchmarkT4/aFunctionT4
           authLevel : anonymous
       - http: true
         x-azure-settings:

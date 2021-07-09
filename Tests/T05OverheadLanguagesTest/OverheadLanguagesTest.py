@@ -40,7 +40,7 @@ class OverheadLanguagesTest(IJMeterOptionalTest):
                 return None
 
             else:
-                update_t1_template(url, execution_time, template, self.get_test_name())
+                update_t1_template(url, execution_time, template, self.jmeter_template)
                 file_name = get_output_file_name(options.ts, options.provider.value)
                 file_name_aux = file_name.split(".")
 

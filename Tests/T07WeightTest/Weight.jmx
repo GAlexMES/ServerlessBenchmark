@@ -20,7 +20,7 @@
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">900</stringProp>
+        <stringProp name="ThreadGroup.duration">90</stringProp>
         <stringProp name="ThreadGroup.delay" />
       </ThreadGroup>
       <hashTree>
@@ -32,7 +32,7 @@
           <stringProp name="HTTPSampler.port" />
           <stringProp name="HTTPSampler.protocol" />
           <stringProp name="HTTPSampler.contentEncoding" />
-          <stringProp name="HTTPSampler.path">https://1bk5eisocj.execute-api.eu-west-2.amazonaws.com/dev/awsFunctionT7?n=40</stringProp>
+          <stringProp name="HTTPSampler.path">https://b74rd9w7nf.execute-api.eu-west-2.amazonaws.com/dev/awsFunctionT7?n=40</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

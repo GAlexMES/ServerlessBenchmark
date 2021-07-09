@@ -17,7 +17,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">9</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">90</stringProp>
@@ -32,7 +32,7 @@
           <stringProp name="HTTPSampler.port" />
           <stringProp name="HTTPSampler.protocol" />
           <stringProp name="HTTPSampler.contentEncoding" />
-          <stringProp name="HTTPSampler.path">https://omiyvznk8l.execute-api.eu-central-1.amazonaws.com/dev/awsFunctionT2</stringProp>
+          <stringProp name="HTTPSampler.path">https://t0fx6ua411.execute-api.eu-west-2.amazonaws.com/dev/awsFunctionT4?n=256</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

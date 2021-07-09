@@ -62,8 +62,9 @@ def main():
 
     if not test.set_arguments(args.options):
         print(
-            "The options {0} do not have the right amount of arguments for {1}"
-                .format(args.options, test.get_test_name())
+            "The options {0} do not have the right amount of arguments for {1}".format(
+                args.options, test.get_test_name()
+            )
         )
         return
 

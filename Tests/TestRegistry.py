@@ -2,7 +2,7 @@ from Tests.IJMeterTest import IJMeterTest
 from Tests.T01OverheadTest.OverheadTest import OverheadTest
 from Tests.T02ConcurrencyTest.ConcurrencyTest import ConcurrencyTest
 from Tests.T03ContainerReuseTest.ContainerReuseTest import ContainerReuseTest
-from Tests.T04ContainerReuseTest.PayloadTest import PayloadTest
+from Tests.T04PayloadTest.PayloadTest import PayloadTest
 from Tests.T05OverheadLanguagesTest.OverheadLanguagesTest import OverheadLanguagesTest
 from Tests.T06MemoryTest.MemoryTest import MemoryTest
 from Tests.T07WeightTest.WeightTest import WeightTest

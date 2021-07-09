@@ -11,7 +11,6 @@ from Tests.TestHelpers import (
     run_jmeter,
     create_final_file_name,
     append_query_parameter,
-    get_weights,
     get_jmeter_result_path,
 )
 
@@ -22,14 +21,15 @@ class WeightTest(IJMeterTest):
     def get_test_name(self):
         return "T07WeightTest"
 
+    weights = [0, 5, 10, 15, 20, 25, 30, 35, 40]
+
     def run(self, options: RunOptions) -> str or None:
         execution_time = self.arguments[0]
 
-        weights = get_weights(self.get_test_name())
         files_provider = []
         template = ElementTree.ElementTree(file=self.jmeter_template)
 
-        for weight in weights:
+        for weight in self.weights:
             function_url_appended = append_query_parameter(options.function_url, str(weight))
             update_t1_template(function_url_appended, execution_time, template, self.jmeter_template)
             file_name = get_output_file_name(options.ts, options.provider.value)
