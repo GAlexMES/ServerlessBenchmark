@@ -30,6 +30,7 @@ class IJMeterTest:
     supported_providers = [Provider.aws, Provider.ow, Provider.azure, Provider.google]
     required_arguments_count = 1
     arguments: List[str] or None
+    options : Dict[Provider, List[str]] = None
 
     def is_test_applicable_for_provider(self, provider: Provider):
         return provider in self.supported_providers
@@ -47,39 +48,16 @@ class IJMeterTest:
         write_conf(config)
 
     def get_function_information(self, provider: Provider) -> List[FunctionInformation]:
-        config = read_conf()
-        function_dir = "{0}/functions/{1}Benchmark".format(self.get_test_name(), provider.value)
-        function_path = os.path.join(os.path.dirname(__file__), function_dir)
-        function_package_name = config["{0}Functions".format(provider.name)][self.get_test_name()]
-        function_url = "{0}".format(function_package_name["function"])
-        function_info = FunctionInformation(function_path, function_url, None)
-        return [function_info]
+        base_function_dir = "{0}/functions/{1}Benchmark".format(self.get_test_name(), provider.value)
+        if self.options is None:
+            function_path = os.path.join(os.path.dirname(__file__), base_function_dir)
+            return [FunctionInformation(function_path, None)]
 
-    def run(self, options: RunOptions) -> str or None:
-        """Load in the file for extracting text."""
-        pass
-
-    def plot(self, options: PlotOptions):
-        """Extract text from the currently loaded file."""
-        pass
-
-    def get_test_name(self) -> str:
-        """Extract text from the currently loaded file."""
-        pass
-
-
-class IJMeterOptionalTest(IJMeterTest):
-    options = Dict[Provider, List[str]]
-
-    def get_function_information(self, provider: Provider) -> List[FunctionInformation]:
-        config = read_conf()
         functions_info = []
         for option in self.options.get(provider):
-            function_dir = "{0}/functions/{1}Benchmark{2}".format(self.get_test_name(), provider.value, option)
+            function_dir = "{0}{1}".format(base_function_dir, option)
             function_path = os.path.join(os.path.dirname(__file__), function_dir)
-            function_package_name = config["{0}Functions".format(provider.name)][self.get_test_name()][option]
-            function_url = "{0}".format(function_package_name["function"])
-            function_info = FunctionInformation(function_path, function_url, option)
+            function_info = FunctionInformation(function_path, option)
             functions_info.append(function_info)
         return functions_info
 

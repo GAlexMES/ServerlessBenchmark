@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ElementTree
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import PlotOptions, RunOptions, IJMeterOptionalTest
+from Tests.IJMeterTest import PlotOptions, RunOptions, IJMeterTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
 from Tests.TestHelpers import (
@@ -13,7 +13,7 @@ from Tests.TestHelpers import (
 )
 
 
-class OverheadLanguagesTest(IJMeterOptionalTest):
+class OverheadLanguagesTest(IJMeterTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "OverheadLanguages.jmx")
 
     options = {

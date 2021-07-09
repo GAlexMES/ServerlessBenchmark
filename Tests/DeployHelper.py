@@ -15,7 +15,9 @@ def deploy_test_in_provider(provider: Provider, test: IJMeterTest):
     functions_info = test.get_function_information(provider)
     for function_info in functions_info:
         serverless_deploy_response = deploy(function_info.path, provider)
-        function_url = get_function_url(serverless_deploy_response,)
+        function_url = get_function_url(
+            serverless_deploy_response,
+        )
 
         if function_url is not None:
             test.save_function_url(provider.value, function_url, function_info.detail)
@@ -100,5 +102,3 @@ def get_function_url(serverless_response):
             return "https://{0}".format(line.split()[4])
 
     return None
-
-
