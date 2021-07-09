@@ -30,7 +30,7 @@ class IJMeterTest:
     supported_providers = [Provider.aws, Provider.ow, Provider.azure, Provider.google]
     required_arguments_count = 1
     arguments: List[str] or None
-    options : Dict[Provider, List[str]] = None
+    options: Dict[Provider, List[str]] = None
 
     def is_test_applicable_for_provider(self, provider: Provider):
         return provider in self.supported_providers
