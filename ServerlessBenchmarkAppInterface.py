@@ -60,18 +60,17 @@ def main():
 
     test = get_function_for_number(args.suite)
 
-    if not test.set_arguments(args.options):
-        print(
-            "The options {0} do not have the right amount of arguments for {1}".format(
-                args.options, test.get_test_name()
-            )
-        )
-        return
-
     if args.deploy is not None and args.deploy:
         deploy_test_in_providers(providers, test)
 
     if args.test is not None and args.test:
+        if not test.set_arguments(args.options):
+            print(
+                "The options {0} do not have the right amount of arguments for {1}".format(
+                    args.options, test.get_test_name()
+                )
+            )
+            return
         run_test(test, providers)
 
     if args.remove is not None and args.remove:

@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ElementTree
 
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
+from Tests.Provider import Provider
 from Tests.TestHelpers import (
     get_output_file_name,
     run_jmeter,
@@ -22,6 +23,9 @@ class ConcurrencyTest(IJMeterTest):
 
     def get_test_name(self):
         return "T02ConcurrencyTest"
+
+    def get_function_path(self, provider: Provider) -> str:
+        return "../ServerlessFunctions/SimpleGetEndpoints/{0}GetEndpoint".format(provider.value)
 
     def run(self, options: RunOptions) -> str or None:
         min_concurrency = int(self.arguments[0])

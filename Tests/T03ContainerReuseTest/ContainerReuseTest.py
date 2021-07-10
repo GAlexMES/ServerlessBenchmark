@@ -6,6 +6,7 @@ import time
 
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
+from Tests.Provider import Provider
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -25,6 +26,9 @@ class ContainerReuseTest(IJMeterTest):
 
     def get_test_name(self):
         return "T03ContainerReuseTest"
+
+    def get_function_path(self, provider: Provider) -> str:
+        return "../ServerlessFunctions/SimpleGetEndpoints/{0}GetEndpoint".format(provider.value)
 
     def run(self, options: RunOptions) -> str or None:
         min_wait_time = int(self.arguments[0])

@@ -47,8 +47,11 @@ class IJMeterTest:
             config["functionsURL"][provider][self.get_test_name()] = url
         write_conf(config)
 
+    def get_function_path(self, provider: Provider) -> str:
+        return "{0}/functions/{1}Benchmark".format(self.get_test_name(), provider.value)
+
     def get_function_information(self, provider: Provider) -> List[FunctionInformation]:
-        base_function_dir = "{0}/functions/{1}Benchmark".format(self.get_test_name(), provider.value)
+        base_function_dir = self.get_function_path(provider)
         if self.options is None:
             function_path = os.path.join(os.path.dirname(__file__), base_function_dir)
             return [FunctionInformation(function_path, None)]

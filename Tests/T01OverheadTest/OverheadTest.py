@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ElementTree
 
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import save_fig, plot_real_latency
+from Tests.Provider import Provider
 from Tests.TestHelpers import (
     update_t1_template,
     get_output_file_name,
@@ -18,6 +19,9 @@ class OverheadTest(IJMeterTest):
 
     def get_test_name(self):
         return "T01OverheadTest"
+
+    def get_function_path(self, provider: Provider) -> str:
+        return "../ServerlessFunctions/SimpleGetEndpoints/{0}GetEndpoint".format(provider.value)
 
     def run(self, options: RunOptions) -> str or None:
         execution_time = self.arguments[0]

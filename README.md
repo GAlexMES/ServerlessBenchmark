@@ -5,25 +5,7 @@ Expandable command-line software tool to benchmark serverless platforms from Ama
 
 The seven deﬁned tests cover scalability (latency and throughput), the effect of allocated memory, the performance for CPU-bound cases, the impact of payload size, the inﬂuence of the programming language, resource management (e.g., reuse of containers), and overall platform overhead.
 
-
 **This project is base on the [Benchmarking Serverless Computing Platforms](https://link.springer.com/content/pdf/10.1007/s10723-020-09523-1.pdf) paper by Horacio Martins, Filipe Araujo and Paulo Rupino da Cunha**
-
-They were so generous to provide the code for the benchmarking on [GitHub](https://github.com/hjmart93/ServerlessBenchmark).
-This code is working perfectly fine, but I had problems to understand it, so I improved a couple of things without changing the concept nor the behaviour of the tool.
-
-Therefor I changed the following:
-
-1. Update to python 3
-2. Update all the lambda functions (including gradle, java, node etc. )
-3. Added auto build to the `deploy` functionality of the Benchmarking tool   
-4. Add a pipfile to install all dependencies (simply run `pipenv install` to install all dependencies)
-5. Add type hints
-6. Refactor code to be less redundant and more test case oriented with a small amount of shared helper functions
-7. Use `.format` instead of string aggregation
-8. Added Black for codestyle
-9. Gave the tests a proper name in the file system and in the config
-10. Improved this readme
-11. a lot of smaller bugfixes, typo fixes and other stuff
 
 # Contribute
 
@@ -55,11 +37,20 @@ This would deploy, run and remove the first test, which is the Overhead Test on 
 `python ServerlessBenchmarkAppInterface.py -t -d -r -p aws -s 1 90`
 
 The last parameter is the execution time. It is test specific for the Overhead Test.
-Other test specific arguments are explained below
+Other test specific arguments are explained later in the `Tests and their arguments` section.
 
-## Other Tests and their arguments
+## Test a Serverless Functions
+**Which functions are tested, when the test is executed?**  
+In the `ServerlessFunctions` directory are multiple demo functions which are used by the test.
+Most tests use the `SimpleGetEndpoints` but some other tests require a more complicated setup (see functions directory of test).
+Which function is deployed and then tested can be seen in the `*.py` file of the test.
 
-## Overhead
+**What if I want to test my own Endpoint?**  
+Simple enter the URL in the `config.json` in the `functionsUrl` section and call this benchmarking tool without the `-d` and the `-r` flag.
+
+## Tests and their arguments
+
+### Overhead
 
 ```
 ServerlessBenchmarkAppInterface.py -s 1 -o execution_time
@@ -67,7 +58,7 @@ ServerlessBenchmarkAppInterface.py -s 1 -o execution_time
 
 where execution_time is the amount of time the test should last.
 
-## Concurrency Test
+### Concurrency Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 2 -o min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
@@ -78,7 +69,7 @@ max_concurrency is the final level;
 concurrency_step is the step, e.g., from 1 to 30 step 2, would run the test with concurrence 1, 3, 5, etc. up to 29;  
 and level_concurrency_execution_time is the time the tool spends on each concurrency level.  
 
-## Container Reuse Test
+### Container Reuse Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 3 -o min_wait_time max_wait_time time_step pre_execution_time
@@ -89,7 +80,7 @@ max_wait_time is the last interval;
 time_step is the step increment from the minimum to the maximum;  
 and re_execution_time is a warm-up time with invocations before the actual test, to enable the platform to prepare containers.  
 
-## Payload Test
+### Payload Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
@@ -98,7 +89,7 @@ ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
 where execution_time is the amount of time the test should last.
 
 
-## Overhead Language Test
+### Overhead Language Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
@@ -106,7 +97,7 @@ ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
 
 where execution_time is the amount of time the test should last.
 
-## Memory Test
+### Memory Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
@@ -114,11 +105,32 @@ ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
 
 where execution_time is the amount of time the test should last.
 
-## Weight Test
+### Weight Test
 
 ```
 ServerlessBenchmarkAppInterface.py -s 7 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
-       
+
+
+# Shoutout
+**This project is base on the [Benchmarking Serverless Computing Platforms](https://link.springer.com/content/pdf/10.1007/s10723-020-09523-1.pdf) paper by Horacio Martins, Filipe Araujo and Paulo Rupino da Cunha**
+
+
+They were so generous to provide the code for the benchmarking on [GitHub](https://github.com/hjmart93/ServerlessBenchmark).
+This code is working perfectly fine, but I had problems to understand it, so I improved a couple of things without changing the concept nor the behaviour of the tool.
+
+Therefor I changed the following:
+
+1. Update to python 3
+2. Update all the lambda functions (including gradle, java, node etc. )
+3. Added auto build to the `deploy` functionality of the Benchmarking tool
+4. Add a pipfile to install all dependencies (simply run `pipenv install` to install all dependencies)
+5. Add type hints
+6. Refactor code to be less redundant and more test case oriented with a small amount of shared helper functions
+7. Use `.format` instead of string aggregation
+8. Added Black for codestyle
+9. Gave the tests a proper name in the file system and in the config
+10. Improved this readme
+11. a lot of smaller bugfixes, typo fixes and other stuff
