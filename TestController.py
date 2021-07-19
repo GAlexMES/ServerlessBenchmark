@@ -1,17 +1,13 @@
 from Tests.IJMeterTest import RunOptions
-from Tests.Provider import Provider
 from Tests.TestHelpers import get_function_url
 from ResultController import *
-import time
 
 from typing import List
 
 
-def run_test(jmeter_test: IJMeterTest, providers: List[Provider]):
+def run_test(jmeter_test: IJMeterTest, providers: List[Provider], ts: int, execution_time: str) -> List[Result] or None:
     test = jmeter_test.get_test_name()
-    ts = int(time.time())
     files = []
-    execution_time = ""
 
     for provider in providers:
         serverless_provider = provider.value
@@ -27,13 +23,9 @@ def run_test(jmeter_test: IJMeterTest, providers: List[Provider]):
             print("No function deployed for test {0} on {1} provider".format(test, serverless_provider))
             continue
 
-        test_execution_time = jmeter_test.run(RunOptions(files, provider, function_url, ts))
+        jmeter_test.run(RunOptions(files, provider, function_url, ts, execution_time))
 
-        if test_execution_time is not None:
-            execution_time = test_execution_time
-
-    print("Calculate the result...")
-    plot_result(jmeter_test, files, ts, providers, execution_time)
+    return files
 
 
 def get_all_providers(test: str) -> List[str]:

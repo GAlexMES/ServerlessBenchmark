@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from Tests.TestHelpers import get_jmeter_result_path
 
@@ -24,12 +25,12 @@ def print_result_infos(df):
     print("Number executions", df["RealLatency"].count())
 
 
-def plot_real_latency(color: str, label: str, ax, test_name: str, file_name: str):
+def plot_real_latency(color: str, label: str, test_name: str, file_name: str):
     jmeter_file = get_jmeter_result_path(test_name) + "/" + file_name
     df = pd.read_csv(jmeter_file)
 
     print_result_infos(df)
-    plot_data_frame(df.reset_index(), "RealLatency", "index", color, label, ax)
+    plot_data_frame(df.reset_index(), "RealLatency", "index", color, label, plt.gca())
 
 
 def plot_data_frame(data_frame, y, x, color, label, ax):
@@ -44,9 +45,9 @@ def plot_data_frame(data_frame, y, x, color, label, ax):
     )
 
 
-def save_fig(plt, result_path: str, serverless_provider: str, ts: float):
-    fig = plt.gcf()
-    plt.show()
+def save_fig(plot, result_path: str, serverless_provider: str, ts: float):
+    fig = plot.gcf()
+    plot.show()
     Path(result_path).mkdir(parents=True, exist_ok=True)
     fig.savefig(
         "{0}/{1}-{2}.png".format(result_path, serverless_provider, str(ts)),

@@ -2,18 +2,12 @@ import subprocess
 import os
 
 import xml.etree.ElementTree as ElementTree
-
-
 from ConfigController import read_conf
 
 
 def get_function_url(serverless_provider: str, test: str):
     config = read_conf()
     return config["functionsURL"][serverless_provider][test]
-
-
-def create_final_file_name(file_name: str, test_name: str, addition: str, ending: str) -> str:
-    return "{0}-{1}_{2}.{3}".format(file_name, test_name, addition, ending)
 
 
 def append_query_parameter(url: str, appendix: str) -> str:
@@ -50,10 +44,6 @@ def update_t2_template(url: str, execution_time: str, template: ElementTree, fil
 def write_file(root: ElementTree, file_path: str):
     tree = ElementTree.ElementTree(root)
     tree.write(file_path)
-
-
-def get_output_file_name(ts: float, serverless_provider: str):
-    return "{0}{1}.jtl".format(serverless_provider, str(ts))
 
 
 def get_output_file(test: str, file_name: str) -> str:

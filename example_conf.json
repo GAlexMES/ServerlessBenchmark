@@ -18,14 +18,26 @@
       "T06MemoryTest": {
         "512": ""
         },
-      "T07WeightTest": ""
+      "T07WeightTest": "",
+      "T08DatabaseTest": {
+        "ReadAll": "",
+        "ReadAllAgain": "",
+        "Write": "",
+        "Reset"
+      }
     },
     "azure": {
       "T01OverheadTest": "",
       "T02ConcurrencyTest": "",
       "T03ContainerReuseTest": "",
       "T04PayloadTest": "",
-      "T07WeightTest": ""
+      "T07WeightTest": "",
+      "T08DatabaseTest": {
+        "ReadAll": "",
+        "ReadAllAgain": "",
+        "Write": "",
+        "Reset"
+      }
     },
     "google": {
       "T01OverheadTest": "",
@@ -39,7 +51,13 @@
         "M1024": "",
         "M2048": ""
       },
-      "T07WeightTest": ""
+      "T07WeightTest": "",
+      "T08DatabaseTest": {
+        "ReadAll": "",
+        "ReadAllAgain": "",
+        "Write": "",
+        "Reset"
+      }
     },
     "aws": {
       "T01OverheadTest": "",
@@ -59,7 +77,13 @@
         "M1024": "",
         "M2048": ""
       },
-      "T07WeightTest": ""
+      "T07WeightTest": "",
+      "T08DatabaseTest": {
+        "ReadAll": "",
+        "ReadAllAgain": "",
+        "Write": "",
+        "Reset",
+      }
     }
   }
 }

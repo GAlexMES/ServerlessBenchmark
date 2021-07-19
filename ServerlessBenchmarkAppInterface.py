@@ -1,4 +1,5 @@
 import argparse
+import time
 
 from TestController import *
 from Tests.DeployHelper import deploy_test_in_providers, remove_from_providers
@@ -40,6 +41,25 @@ def main():
     )
 
     parser.add_argument(
+        "-e",
+        "--export",
+        type=int,
+        default=None,
+        const=-1,
+        nargs="?",
+        help="Run in the provider all the functions that are needed for the specified test",
+    )
+
+    parser.add_argument(
+        "-x",
+        "--execution_time",
+        type=str,
+        default="90",
+        nargs="?",
+        help="Run in the provider all the functions that are needed for the specified test",
+    )
+
+    parser.add_argument(
         "-o",
         "--options",
         type=str,
@@ -60,9 +80,16 @@ def main():
 
     test = get_function_for_number(args.suite)
 
+    if test is None:
+        return
+
     if args.deploy is not None and args.deploy:
         deploy_test_in_providers(providers, test)
 
+    timestamp = int(time.time()) if args.export is None or args.export == -1 else args.export
+
+    execution_time = args.execution_time
+    results: List[Result] = []
     if args.test is not None and args.test:
         if not test.set_arguments(args.options):
             print(
@@ -71,7 +98,15 @@ def main():
                 )
             )
             return
-        run_test(test, providers)
+
+        results = run_test(test, providers, timestamp, execution_time)
+
+    if args.export is not None:
+        if results is not None and len(results) == 0:
+            results = test.generate_result_sets(timestamp, providers)
+            print(results)
+
+        plot_result(test, results, timestamp, providers, execution_time)
 
     if args.remove is not None and args.remove:
         remove_from_providers(providers, test)

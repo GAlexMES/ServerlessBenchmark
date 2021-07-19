@@ -1,0 +1,49 @@
+service: awsReadAllEndpoint
+configValidationMode: warn
+
+custom: ${file(./database_environment.yml)}
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-2
+  memorySize: 256
+  vpc:
+    securityGroupIds:
+      - sg-8418fcfb
+    subnetIds:
+      - subnet-9ded64d1
+      - subnet-8fc3fce6
+      - subnet-04453e7e
+  environment:
+    DBHOST: ${self:custom.host}
+    DBPORT: ${self:custom.port}
+    DBUSER: ${self:custom.user}
+    DBPASS: ${self:custom.password}
+    DBDATABASE: ${self:custom.database}
+
+resources:
+  Resources:
+    AWSLambdaVPCAccessExecutionRole:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Creating policy for vpc connetion.
+        Roles:
+          - {"Ref" : "IamRoleLambdaExecution"}
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - ec2:CreateNetworkInterface
+                - ec2:DescribeNetworkInterfaces
+                - ec2:DeleteNetworkInterface
+              Resource: "*"
+
+functions:
+  awsReadAllEndpoint:
+    handler: handler.awsReadAllEndpoint
+    events:
+      - http:
+          path: awsReadAllEndpoint/awsReadAllEndpoint
+          method: get

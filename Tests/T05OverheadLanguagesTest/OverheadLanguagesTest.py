@@ -1,21 +1,14 @@
 import os
-import xml.etree.ElementTree as ElementTree
 import matplotlib.pyplot as plt
 
-from Tests.IJMeterTest import PlotOptions, RunOptions, IJMeterTest
+from Tests.IJMeterTest import PlotOptions, IProviderSpecificJMeterTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
-from Tests.TestHelpers import (
-    update_t1_template,
-    get_output_file_name,
-    run_jmeter,
-    create_final_file_name,
-)
 
 
-class OverheadLanguagesTest(IJMeterTest):
+class OverheadLanguagesTest(IProviderSpecificJMeterTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "OverheadLanguages.jmx")
-
+    info_message_format = "No function in {0} for test {1} on {2} provider"
     options = {
         Provider.aws: ["Go", "Java", "NodeJs", "Python"],
         Provider.ow: ["NodeJs", "Php", "Python", "Ruby", "Swift"],
@@ -25,55 +18,19 @@ class OverheadLanguagesTest(IJMeterTest):
     def get_test_name(self):
         return "T05OverheadLanguagesTest"
 
-    def run(self, options: RunOptions) -> str or None:
-        execution_time = self.arguments[0]
-
-        template = ElementTree.ElementTree(file=self.jmeter_template)
-
-        for programming_lang, url in options.function_url.items():
-            if url is None or url == "":
-                print(
-                    "No function in {0} for test {1} on {2} provider".format(
-                        programming_lang, self.get_test_name(), options.provider.value
-                    )
-                )
-                return None
-
-            else:
-                update_t1_template(url, execution_time, template, self.jmeter_template)
-                file_name = get_output_file_name(options.ts, options.provider.value)
-                file_name_aux = file_name.split(".")
-
-                file_name_final = create_final_file_name(
-                    file_name_aux[0], "Pro_Language", programming_lang, file_name_aux[1]
-                )
-
-                run_jmeter(
-                    file_name_final,
-                    self.get_test_name(),
-                    options.provider.value,
-                    self.jmeter_template,
-                )
-                # print(str(jmeter_result.decode('UTF-8')))
-
-                file = (file_name_final, programming_lang)
-                options.files.append(file)
-        return execution_time
-
     def plot(self, options: PlotOptions):
         color_n = 0
-        ax = plt.gca()
-        for file in options.files:
-            language = file[1]
+        for result in options.results:
+            language = result.option
             print(
                 "\n\n\n Result for test T {0} in the {1} provider during {2} seconds, with {3} as programming language of function:".format(
                     self.get_test_name(),
-                    options.provider,
+                    result.provider_name,
                     options.execution_time,
                     language,
                 )
             )
-            plot_real_latency(options.colors[color_n], language, ax, self.get_test_name(), str(file[0]))
+            plot_real_latency(options.colors[color_n], language, self.get_test_name(), result.file_name)
             color_n += 1
 
         plt.xlabel("Function Invocation Sequence Number")

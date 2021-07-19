@@ -66,7 +66,7 @@ def deploy(function_path: str, provider: Provider):
 
 def remove(function_path):
     try:
-        return subprocess.check_output(["serverless", "remove", "--force"], cwd=function_path)
+        return subprocess.check_output(["serverless", "remove", "--verbose"], cwd=function_path)
     except subprocess.CalledProcessError as e:
         raise RuntimeError("command {0} return with error (code {1}): {2}".format(e.cmd, e.returncode, e.output))
 
