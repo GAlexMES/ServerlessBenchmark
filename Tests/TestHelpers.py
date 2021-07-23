@@ -14,33 +14,6 @@ def append_query_parameter(url: str, appendix: str) -> str:
     return "{0}?n={1}".format(url, appendix)
 
 
-def update_t1_template(url: str, execution_time: str, template: ElementTree, file_path: str):
-    root = template.getroot()
-    for elem in template.iter():
-        name = elem.attrib.get("name")
-        if name == "ThreadGroup.duration":
-            elem.text = execution_time
-        elif name == "HTTPSampler.path":
-            elem.text = url
-    print()
-    write_file(root, file_path)
-
-
-def update_t2_template(url: str, execution_time: str, template: ElementTree, file_path: str, n_threads: int):
-    root = template.getroot()
-
-    for elem in template.iter():
-        name = elem.attrib.get("name")
-        if name == "ThreadGroup.duration":
-            elem.text = execution_time
-        elif name == "HTTPSampler.path":
-            elem.text = url
-        elif name == "ThreadGroup.num_threads":
-            elem.text = str(n_threads)
-
-    write_file(root, file_path)
-
-
 def write_file(root: ElementTree, file_path: str):
     tree = ElementTree.ElementTree(root)
     tree.write(file_path)

@@ -1,5 +1,5 @@
 {
-  "name": "awsReadAllEndpoint",
+  "name": "awsReadAllConcurrentEndpoint",
   "version": "1.0.0",
   "description": "AWS Functions sample that reads all data from AWS RDS for the Serverless framework",
   "main": "handler.js",

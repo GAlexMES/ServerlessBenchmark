@@ -4,6 +4,7 @@ from typing import Dict
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from Colors import colors
 from Tests.IJMeterTest import PlotOptions, RunOptions, IProviderSpecificJMeterTest
 from Tests.PlotHelper import print_result_infos, save_fig
 from Tests.Provider import Provider
@@ -60,7 +61,7 @@ class WeightTest(IProviderSpecificJMeterTest):
                 kind="line",
                 y="avg",
                 x="n_of_fib",
-                color=options.colors[color_n],
+                color=colors[color_n],
                 label=provider,
                 ax=ax,
             )

@@ -1,4 +1,4 @@
-service: awsResetEndpoint
+service: awsRAAgainConcurrentEndpoint
 configValidationMode: warn
 custom: ${file(./database_environment.yml)}
 
@@ -40,9 +40,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsResetEndpoint:
-    handler: handler.awsResetEndpoint
+  awsRAAgainConcurrentEndpoint:
+    handler: handler.awsReadAllAgainConcurrentEndpoint
     events:
       - http:
-          path: awsResetEndpoint/awsResetEndpoint
+          path: concurrentDatabaseTest/awsReadAllAgainConcurrentEndpoint
           method: get

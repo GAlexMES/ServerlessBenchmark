@@ -21,7 +21,7 @@ const DataModel = sequelize.define("model", {
 
 let first = true;
 
-module.exports.awsReadAllEndpoint = async (event) => {
+module.exports.awsReadAllConcurrentEndpoint = async (event) => {
     let statusCode = 200;
     if(first){
         first = false;

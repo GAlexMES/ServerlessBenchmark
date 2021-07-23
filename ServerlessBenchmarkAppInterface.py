@@ -90,7 +90,8 @@ def main():
 
     execution_time = args.execution_time
     results: List[Result] = []
-    if args.test is not None and args.test:
+
+    if (args.test is not None and args.test) or args.export is not None:
         if not test.set_arguments(args.options):
             print(
                 "The options {0} do not have the right amount of arguments for {1}".format(
@@ -99,6 +100,7 @@ def main():
             )
             return
 
+    if args.test is not None and args.test:
         results = run_test(test, providers, timestamp, execution_time)
 
     if args.export is not None:

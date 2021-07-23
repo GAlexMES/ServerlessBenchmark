@@ -1,5 +1,6 @@
-service: awsReadAllAgainEndpoint
+service: awsReadAllConcurrentEndpoint
 configValidationMode: warn
+
 custom: ${file(./database_environment.yml)}
 
 provider:
@@ -40,9 +41,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsReadAllAgainEndpoint:
-    handler: handler.awsReadAllAgainEndpoint
+  awsReadAllConcurrentEndpoint:
+    handler: handler.awsReadAllConcurrentEndpoint
     events:
       - http:
-          path: awsReadAllAgainEndpoint/awsReadAllAgainEndpoint
+          path: awsReadAllConcurrentEndpoint/awsReadAllConcurrentEndpoint
           method: get

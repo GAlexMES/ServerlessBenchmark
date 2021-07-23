@@ -8,7 +8,7 @@ from Tests.Provider import Provider
 
 from dataclasses import dataclass
 
-from Tests.TestHelpers import update_t1_template, run_jmeter
+from Tests.TestHelpers import run_jmeter, write_file
 
 
 @dataclass
@@ -22,7 +22,6 @@ class Result:
 class PlotOptions:
     results: List[Result]
     execution_time: str
-    colors: List[str]
     result_path: str
     provider: str
     ts: int
@@ -67,6 +66,24 @@ class IJMeterTest:
         function_path = os.path.join(os.path.dirname(__file__), base_function_dir)
         return [FunctionInformation(function_path, None)]
 
+    def update_template(self, url: str, execution_time: str, n_threads: int = 4):
+        print(str(n_threads))
+        template = ElementTree.ElementTree(file=self.jmeter_template)
+        return self.update_specific_template(url, execution_time, template, self.jmeter_template, n_threads)
+
+    def update_specific_template(self, url: str, execution_time: str, template: ElementTree, file_path: str, n_threads: int = 4):
+        root = template.getroot()
+        for elem in template.iter():
+            name = elem.attrib.get("name")
+            if name == "ThreadGroup.duration":
+                elem.text = execution_time
+            elif name == "HTTPSampler.path":
+                elem.text = url
+            elif name == "ThreadGroup.num_threads":
+                elem.text = str(n_threads)
+
+        write_file(root, file_path)
+
     def run(self, options: RunOptions):
         """Load in the file for extracting text."""
         pass
@@ -104,7 +121,7 @@ class IProviderSpecificJMeterTest(IJMeterTest):
                 files.append(Result(self.get_output_file_name(timestamp, provider, option), provider.value, option))
         return files
 
-    def get_function_information_for_options(self, provider:Provider, option:str):
+    def get_function_information_for_options(self, provider: Provider, option: str):
         base_function_dir = self.get_function_path(provider)
         function_dir = "{0}{1}".format(base_function_dir, option)
         function_path = os.path.join(os.path.dirname(__file__), function_dir)
@@ -117,7 +134,6 @@ class IProviderSpecificJMeterTest(IJMeterTest):
         return functions_info
 
     def run(self, options: RunOptions):
-        template = ElementTree.ElementTree(file=self.jmeter_template)
 
         for option, url in options.function_url.items():
             if url is None or url == "":
@@ -125,7 +141,7 @@ class IProviderSpecificJMeterTest(IJMeterTest):
                 continue
 
             else:
-                update_t1_template(url, options.execution_time, template, self.jmeter_template)
+                self.update_template(url, options.execution_time)
                 file_name = self.get_output_file_name(options.ts, options.provider, option)
 
                 run_jmeter(

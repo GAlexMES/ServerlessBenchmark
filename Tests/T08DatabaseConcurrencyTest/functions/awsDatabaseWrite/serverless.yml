@@ -1,4 +1,4 @@
-service: awsWriteEndpoint
+service: awsWriteConcurrentEndpoint
 configValidationMode: warn
 custom: ${file(./database_environment.yml)}
 
@@ -40,9 +40,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsWriteEndpoint:
-    handler: handler.awsWriteEndpoint
+  awsWriteConcurrentEndpoint:
+    handler: handler.awsWriteConcurrentEndpoint
     events:
       - http:
-          path: awsWriteEndpoint/awsWriteEndpoint
+          path: awsWriteConcurrentEndpoint/awsWriteConcurrentEndpoint
           method: get

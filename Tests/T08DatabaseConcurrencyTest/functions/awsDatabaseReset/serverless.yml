@@ -1,6 +1,5 @@
-service: awsReadAllEndpoint
+service: awsResetConcurrentEndpoint
 configValidationMode: warn
-
 custom: ${file(./database_environment.yml)}
 
 provider:
@@ -41,9 +40,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsReadAllEndpoint:
-    handler: handler.awsReadAllEndpoint
+  awsResetConcurrentEndpoint:
+    handler: handler.awsResetConcurrentEndpoint
     events:
       - http:
-          path: awsReadAllEndpoint/awsReadAllEndpoint
+          path: awsResetConcurrentEndpoint/awsResetConcurrentEndpoint
           method: get

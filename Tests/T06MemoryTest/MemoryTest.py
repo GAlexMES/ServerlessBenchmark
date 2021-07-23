@@ -2,6 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 
+from Colors import colors
 from Tests.IJMeterTest import PlotOptions, IProviderSpecificJMeterTest
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
@@ -32,7 +33,7 @@ class MemoryTest(IProviderSpecificJMeterTest):
                     memory,
                 )
             )
-            plot_real_latency(options.colors[color_n], memory, self.get_test_name(), result.file_name)
+            plot_real_latency(colors[color_n], memory, self.get_test_name(), result.file_name)
             color_n += 1
 
         plt.xlabel("Function Invocation Sequence Number")

@@ -19,11 +19,11 @@
         "512": ""
         },
       "T07WeightTest": "",
-      "T08DatabaseTest": {
+      "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
         "Write": "",
-        "Reset"
+        "Reset": ""
       }
     },
     "azure": {
@@ -32,11 +32,11 @@
       "T03ContainerReuseTest": "",
       "T04PayloadTest": "",
       "T07WeightTest": "",
-      "T08DatabaseTest": {
+      "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
         "Write": "",
-        "Reset"
+        "Reset": ""
       }
     },
     "google": {
@@ -52,11 +52,11 @@
         "M2048": ""
       },
       "T07WeightTest": "",
-      "T08DatabaseTest": {
+      "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
         "Write": "",
-        "Reset"
+        "Reset": ""
       }
     },
     "aws": {
@@ -78,11 +78,11 @@
         "M2048": ""
       },
       "T07WeightTest": "",
-      "T08DatabaseTest": {
+      "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
         "Write": "",
-        "Reset",
+        "Reset": ""
       }
     }
   }

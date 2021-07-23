@@ -6,17 +6,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
+from Colors import colors
 from ResultController import Result
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.Provider import Provider
-from Tests.TestHelpers import (
-    update_t1_template,
-    run_jmeter,
-    get_function_url,
-    write_file,
-    get_jmeter_result_path,
-)
+from Tests.TestHelpers import run_jmeter, get_function_url, get_jmeter_result_path
 
 
 class ContainerReuseTest(IJMeterTest):
@@ -61,7 +56,7 @@ class ContainerReuseTest(IJMeterTest):
 
         print("Updating Template for test...")
 
-        update_t1_template(options.function_url, options.execution_time, template, self.jmeter_template_0)
+        self.update_specific_template(options.function_url, options.execution_time, template, self.jmeter_template_0, 1)
         file_name = self.get_output_file_name(options.ts, options.provider, "preexecution")
 
         run_jmeter(
@@ -85,7 +80,7 @@ class ContainerReuseTest(IJMeterTest):
             print(info_tet)
 
             time.sleep(wait_time)
-            self.update_t3_template(get_function_url(options.provider.value, self.get_test_name()), template)
+            self.update_specific_template(get_function_url(options.provider.value, self.get_test_name()), "2", template, self.jmeter_template_1, 1)
             file_name = self.get_output_file_name(options.ts, options.provider, "waittime-" + str(wait_time))
 
             run_jmeter(
@@ -95,15 +90,6 @@ class ContainerReuseTest(IJMeterTest):
                 self.jmeter_template_1,
             )
             options.results.append(Result(file_name, options.provider.value, wait_time))
-
-    def update_t3_template(self, url: str, template: ElementTree):
-        root = template.getroot()
-
-        for elem in template.iter():
-            if elem.attrib.get("name") == "HTTPSampler.path":
-                elem.text = url
-
-        write_file(root, self.jmeter_template_1)
 
     def plot(self, options: PlotOptions):
         ax = plt.gca()
@@ -132,7 +118,7 @@ class ContainerReuseTest(IJMeterTest):
             if provider == "ow":
                 provider = "ibm bluemix"
 
-            plot_data_frame(data_frame, "avg", "waittime", options.colors[color_n], provider, ax)
+            plot_data_frame(data_frame, "avg", "waittime", colors[color_n], provider, ax)
             color_n += 1
 
         plt.xlabel("Time Since Last Execution (min)")

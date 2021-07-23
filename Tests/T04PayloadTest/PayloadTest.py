@@ -1,10 +1,10 @@
 import os
-import xml.etree.ElementTree as ElementTree
 from typing import Dict
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from Colors import colors
 from Tests.IJMeterTest import IProviderSpecificJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.Provider import Provider
@@ -62,7 +62,7 @@ class PayloadTest(IProviderSpecificJMeterTest):
             data_frame = pd.DataFrame(data)
             if provider == "ow":
                 provider = "ibm bluemix"
-            plot_data_frame(data_frame, "avg", "payloadsize", options.colors[color_n], provider, ax)
+            plot_data_frame(data_frame, "avg", "payloadsize", colors[color_n], provider, ax)
             color_n += 1
 
         plt.xlabel("Payload Size (KBytes)")

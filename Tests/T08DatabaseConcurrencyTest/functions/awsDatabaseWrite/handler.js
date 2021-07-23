@@ -1,8 +1,7 @@
 'use strict';
 
-const { Sequelize, DataTypes } = require('sequelize');
-
-let first = true;
+const { DataTypes } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
     process.env.DBDATABASE,
@@ -21,7 +20,9 @@ const DataModel = sequelize.define("model", {
     birthday: DataTypes.INTEGER,
 });
 
-module.exports.awsReadAllAgainEndpoint = async (event) => {
+let first = true
+
+module.exports.awsWriteConcurrentEndpoint = async (event) => {
     let statusCode = 200;
     if(first){
         first = false;
@@ -30,14 +31,16 @@ module.exports.awsReadAllAgainEndpoint = async (event) => {
     }else{
         console.log("no new instance :)")
     }
-    const allEntries = await DataModel.findAll()
 
-    console.log("Found that many entries:"+allEntries.length);
+    await DataModel.build({
+        name: "A User",
+        birthday: parseInt(event.queryStringParameters["counter"])
+    }).save()
+
     return {
         statusCode,
         body: JSON.stringify({
-            message: 'Hello, ' +event["queryStringParameters"]['counter'],
-        }),
-    };
+            message: 'Hello, World!',
+        })
+    }
 };
-

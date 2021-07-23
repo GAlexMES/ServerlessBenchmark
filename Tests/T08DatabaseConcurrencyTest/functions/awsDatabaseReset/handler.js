@@ -20,7 +20,7 @@ const DataModel = sequelize.define("model", {
     birthday: DataTypes.INTEGER,
 });
 
-module.exports.awsResetEndpoint = async (event, context, callback) => {
+module.exports.awsResetConcurrentEndpoint = async (event, context, callback) => {
     await DataModel.destroy({truncate: true}).then(() => DataModel.sync()).then(() => {
         callback(null, {
             statusCode: 200,

@@ -1,19 +1,15 @@
 import os
-from typing import List
-
 import matplotlib.pyplot as plt
 import pandas as pd
-import xml.etree.ElementTree as ElementTree
 
+from typing import List
+
+from Colors import colors
 from ResultController import Result
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import print_result_infos, save_fig, plot_data_frame
 from Tests.Provider import Provider
-from Tests.TestHelpers import (
-    run_jmeter,
-    get_jmeter_result_path,
-    update_t2_template,
-)
+from Tests.TestHelpers import run_jmeter, get_jmeter_result_path
 
 
 class ConcurrencyTest(IJMeterTest):
@@ -44,13 +40,10 @@ class ConcurrencyTest(IJMeterTest):
         return False
 
     def run(self, options: RunOptions):
-        template = ElementTree.ElementTree(file=self.jmeter_template)
         for num_threads in self.thread_range:
-            update_t2_template(
+            self.update_template(
                 options.function_url,
                 options.execution_time,
-                template,
-                self.jmeter_template,
                 num_threads,
             )
             file_name = self.get_output_file_name(options.ts, options.provider, num_threads)
@@ -98,10 +91,10 @@ class ConcurrencyTest(IJMeterTest):
                 provider = "ibm bluemix"
 
             label = "{0} Latency".format(provider)
-            plot_data_frame(data_frame, "avg", "concurrency", options.colors[color_n], label, ax1)
+            plot_data_frame(data_frame, "avg", "concurrency", colors[color_n], label, ax1)
             color_n += 1
             label = "{0} Throughput".format(provider)
-            plot_data_frame(data_frame, "throughput", "concurrency", options.colors[color_n], label, ax2)
+            plot_data_frame(data_frame, "throughput", "concurrency", colors[color_n], label, ax2)
             color_n += 1
 
         ax1.set_ylabel("Average Latency (ms)")

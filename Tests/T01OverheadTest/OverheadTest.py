@@ -1,16 +1,13 @@
 import os
 
 import matplotlib.pyplot as plt
-import xml.etree.ElementTree as ElementTree
 
+from Colors import colors
 from ResultController import Result
 from Tests.IJMeterTest import IJMeterTest, PlotOptions, RunOptions
 from Tests.PlotHelper import save_fig, plot_real_latency
 from Tests.Provider import Provider
-from Tests.TestHelpers import (
-    update_t1_template,
-    run_jmeter,
-)
+from Tests.TestHelpers import run_jmeter
 
 
 class OverheadTest(IJMeterTest):
@@ -24,9 +21,7 @@ class OverheadTest(IJMeterTest):
         return "../ServerlessFunctions/SimpleGetEndpoints/{0}GetEndpoint".format(provider.value)
 
     def run(self, options: RunOptions):
-        template = ElementTree.ElementTree(file=self.jmeter_template)
-
-        update_t1_template(options.function_url, options.execution_time, template, self.jmeter_template)
+        self.update_template(options.function_url, options.execution_time)
         file_name = self.get_output_file_name(options.ts, options.provider)
 
         run_jmeter(file_name, self.get_test_name(), options.provider.value, self.jmeter_template)
@@ -45,7 +40,7 @@ class OverheadTest(IJMeterTest):
                     self.get_test_name(), provider, options.execution_time
                 )
             )
-            plot_real_latency(options.colors[color_n], provider, self.get_test_name(), result.file_name)
+            plot_real_latency(colors[color_n], provider, self.get_test_name(), result.file_name)
             color_n += 1
 
         plt.xlabel("Function Invocation Sequence Number")
