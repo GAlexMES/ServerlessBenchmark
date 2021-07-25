@@ -1,4 +1,4 @@
-service: awsWriteConcurrentEndpoint
+service: awsSelectConcurrentTest-selectAgain
 configValidationMode: warn
 custom: ${file(./database_environment.yml)}
 
@@ -41,9 +41,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsWriteConcurrentEndpoint:
-    handler: handler.awsWriteConcurrentEndpoint
+  selectAgainn:
+    handler: handler.selectAgain
     events:
       - http:
-          path: awsWriteConcurrentEndpoint/awsWriteConcurrentEndpoint
+          path: awsSelectConcurrentTest/selectAgain
           method: get

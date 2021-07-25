@@ -1,4 +1,4 @@
-service: awsWriteConcurrentEndpoint
+service: awsSelectConcurrentTest-reset
 configValidationMode: warn
 custom: ${file(./database_environment.yml)}
 
@@ -41,9 +41,9 @@ resources:
               Resource: "*"
 
 functions:
-  awsWriteConcurrentEndpoint:
-    handler: handler.awsWriteConcurrentEndpoint
+  reset:
+    handler: handler.reset
     events:
       - http:
-          path: awsWriteConcurrentEndpoint/awsWriteConcurrentEndpoint
+          path: awsSelectConcurrentTest/Reset
           method: get

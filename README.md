@@ -18,6 +18,7 @@ I will look into it as fast as I can. Please just stick to the codestyle.
 
 Make sure, that pipenv and python 3 is installed on your system.  
 Run `pipenv install` in the root of this directory.
+Run `pipenv shell` to get a shell, in which you can then execute `python3 ServerlessBenchmarkAppInterface.py ...`
 
 ## Start a test
 
@@ -29,12 +30,13 @@ The most important arguments are:
 1. `-s or --suite` to define, which test suite should be executed
 2. `-p or --provider` to define the provider. Default is all providers
 3. `-d or --deploy` to deploy the functions for the test suite
-4. `-t or --test` to execute the test itself   
-4. `-r or --remove` to remove the deployed functions for the test suite
+4. `-e or --export` to trigger the export to .pdf and .png. You can also unse `-e <timestamp>` where the timestamp is the timestamp in the filename of an existing jmeter result file. Do not use thhat with `-t`.
+5. `-t or --test` to execute the test itself   
+6. `-r or --remove` to remove the deployed functions for the test suite
 
 This would deploy, run and remove the first test, which is the Overhead Test on AWS:
 
-`python ServerlessBenchmarkAppInterface.py -t -d -r -p aws -s 1 90`
+`python3 ServerlessBenchmarkAppInterface.py -t -d -r -p aws -s 1 90`
 
 The last parameter is the execution time. It is test specific for the Overhead Test.
 Other test specific arguments are explained later in the `Tests and their arguments` section.
@@ -52,16 +54,16 @@ Simple enter the URL in the `config.json` in the `functionsUrl` section and call
 
 ### Overhead
 
-```
-ServerlessBenchmarkAppInterface.py -s 1 -o execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 1 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
 
 ### Concurrency Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 2 -o min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 2 -o min_concurrency max_concurrency concurrency_step level_concurrency_execution_time
 ```
 
 where min_concurrency is the starting level of concurrency;  
@@ -71,8 +73,8 @@ and level_concurrency_execution_time is the time the tool spends on each concurr
 
 ### Container Reuse Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 3 -o min_wait_time max_wait_time time_step pre_execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 3 -o min_wait_time max_wait_time time_step pre_execution_time
 ```
 
 where min_wait_time is the first interval of waiting time between invocations;  
@@ -82,8 +84,8 @@ and re_execution_time is a warm-up time with invocations before the actual test,
 
 ### Payload Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -91,24 +93,24 @@ where execution_time is the amount of time the test should last.
 
 ### Overhead Language Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
 
 ### Memory Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
 
 ### Weight Test
 
-```
-ServerlessBenchmarkAppInterface.py -s 7 -o execution_time
+```bash
+python3 ServerlessBenchmarkAppInterface.py -s 7 -o execution_time
 ```
 
 where execution_time is the amount of time the test should last.
@@ -134,3 +136,4 @@ Therefor I changed the following:
 9. Gave the tests a proper name in the file system and in the config
 10. Improved this readme
 11. a lot of smaller bugfixes, typo fixes and other stuff
+12. added a database cocurrency test

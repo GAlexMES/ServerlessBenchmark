@@ -106,7 +106,6 @@ def main():
     if args.export is not None:
         if results is not None and len(results) == 0:
             results = test.generate_result_sets(timestamp, providers)
-            print(results)
 
         plot_result(test, results, timestamp, providers, execution_time)
 

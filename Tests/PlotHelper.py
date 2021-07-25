@@ -34,7 +34,7 @@ def plot_real_latency(color: str, label: str, test_name: str, file_name: str):
 
 
 def plot_data_frame(data_frame, y, x, color, label, ax):
-    data_frame.plot(
+    return data_frame.plot(
         marker="o",
         kind="line",
         y=y,
@@ -45,15 +45,15 @@ def plot_data_frame(data_frame, y, x, color, label, ax):
     )
 
 
-def save_fig(plot, result_path: str, serverless_provider: str, ts: float):
+def save_fig(plot, result_path: str, test_name: str, ts: float):
     fig = plot.gcf()
     plot.show()
     Path(result_path).mkdir(parents=True, exist_ok=True)
     fig.savefig(
-        "{0}/{1}-{2}.png".format(result_path, serverless_provider, str(ts)),
+        "{0}/{1}-{2}.png".format(result_path, test_name, str(ts)),
         transparent=False,
     )
     fig.savefig(
-        "{0}/{1}-{2}.pdf".format(result_path, serverless_provider, str(ts)),
+        "{0}/{1}-{2}.pdf".format(result_path, test_name, str(ts)),
         transparent=False,
     )

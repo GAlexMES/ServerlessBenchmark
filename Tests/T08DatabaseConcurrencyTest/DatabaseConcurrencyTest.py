@@ -4,6 +4,7 @@ from typing import Dict, List
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 from Colors import colors, get_complementair
 from Tests.FunctionInformation import FunctionInformation
@@ -11,8 +12,6 @@ from Tests.IJMeterTest import PlotOptions, RunOptions, IProviderSpecificJMeterTe
 from Tests.PlotHelper import save_fig, plot_data_frame, print_result_infos
 from Tests.Provider import Provider
 from Tests.TestHelpers import get_jmeter_result_path, run_jmeter
-
-instances = 0
 
 
 class DatabaseConcurrencyTest(IProviderSpecificJMeterTest):
@@ -25,7 +24,7 @@ class DatabaseConcurrencyTest(IProviderSpecificJMeterTest):
     }
 
     def get_test_name(self):
-        return "T09DatabaseConcurrencyTest"
+        return "T08DatabaseConcurrencyTest"
 
     def set_arguments(self, options: List[str] or None) -> bool:
         if super().check_arguments(options):
@@ -52,13 +51,14 @@ class DatabaseConcurrencyTest(IProviderSpecificJMeterTest):
         return files
 
     def run(self, options: RunOptions):
-        #urllib.request.urlopen(options.function_url["Reset"]).read()
+        urllib.request.urlopen(options.function_url["Reset"]).read()
         url_dict: Dict[str, str] = dict()
         for type in self.options[options.provider]:
             url_dict[type] = options.function_url[type] + "?counter=${counter_value}"
             for num_threads in self.thread_range:
                 self.update_template(url_dict[type], options.execution_time, num_threads)
-                file_name = self.get_output_file_name(options.ts, options.provider, "{0}-{1}".format(type, str(num_threads)))
+                file_name_appendix = "{0}-{1}".format(type, str(num_threads))
+                file_name = self.get_output_file_name(options.ts, options.provider, file_name_appendix)
                 run_jmeter(
                     file_name,
                     self.get_test_name(),
@@ -66,67 +66,95 @@ class DatabaseConcurrencyTest(IProviderSpecificJMeterTest):
                     self.jmeter_template,
                 )
 
-                options.results.append(Result(file_name, options.provider.value,  "{0}-{1}".format(type, str(num_threads))))
+                options.results.append(Result(file_name, options.provider.value, file_name_appendix))
 
     def plot(self, options: PlotOptions):
         ax_whole_process = plt.gca()
-        color_n = 0
-        results = []
-        for result in options.results:
-            file_name = result.file_name
-            provider = result.provider_name
-            type = result.option
-            color = colors[color_n]
-            color_n += 1
+        for provider in options.provider:
+            color_n = 0
+            results_grouped = []
 
-            jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + file_name
-            df = pd.read_csv(jmeter_file)
-            print_result_infos(df)
-            df = df.reset_index()
-            results.append((provider, file_name, color, df, type))
+            def filter_func(x, option_name: str, p: Provider) -> bool:
+                return x.option.split("-")[0] == option_name and x.provider_name == p.value
 
-            plot_data_frame(df, "RealLatency", "index", colors[color_n], type, ax_whole_process)
+            for option in self.options[provider]:
+                results_grouped.append(list(filter(lambda x: filter_func(x, option, provider), options.results)))
 
-            print("\n\nResult for Database {0} test in the {1} provider:".format(type, provider))
+            enriched_results_grouped = []
+            for results in results_grouped:
 
-        plt.xlabel("something")
-        plt.ylabel("Latency (ms)")
-        plt.title("Average latency for database access during {0} seconds".format(options.execution_time))
+                number_of_data_points = 0
+                color_n += 1
+                color = colors[color_n]
+                thread_areas = []
+                data_frame = None
+                type = ""
+                for result in results:
+                    file_name = result.file_name
+                    type = result.option
+                    jmeter_file = get_jmeter_result_path(self.get_test_name()) + "/" + file_name
+                    df = pd.read_csv(jmeter_file)
+                    print_result_infos(df)
 
-        save_fig(plt, options.result_path, options.provider, options.ts)
+                    df = df.reset_index()
+                    df["index"] = df["index"].apply(lambda x: x + number_of_data_points)
+                    number_of_data_points = number_of_data_points + df.shape[0]
+                    thread_areas.append((type.split("-")[1], number_of_data_points))
+                    if data_frame is None:
+                        data_frame = df
+                    else:
+                        data_frame = pd.concat([data_frame, df])
 
-        results_grouped = []
-        results_grouped.append(filter(lambda x: x[4].split("-")[0] == "ReadAll", results))
-        results_grouped.append(filter(lambda x: x[4].split("-")[0] == "Write", results))
-        results_grouped.append(filter(lambda x: x[4].split("-")[0] == "ReadAllAgain", results))
+                plot_data_frame(data_frame, "RealLatency", "index", color, type.split("-")[0], ax_whole_process)
+                print("\n\nResult for Database {0} test in the {1} provider:".format(type, provider.value))
+                enriched_results_grouped.append((color, data_frame, type, thread_areas))
 
-        def increase_instance(x):
-            global instances
-            if x == 202:
-                instances += 1
-            return instances
-
-        # TODO DATA ALL BAD GATEWAY
-
-        for result_group in results_grouped:
-            plt.clf()
-            instances = 0
-            number_of_data_points = 0
-            type = ""
-            ax_function = plt.gca()
-            ax2 = ax_function.twinx()
-            for result in result_group:
-                df = result[3]
-                type = result[4].split("-")[0]
-                threads = result[4].split("-")[1]
-                df["instances"] = df["responseCode"].apply(increase_instance)
-                df["index"] = df["index"].apply(lambda x: x + number_of_data_points)
-                number_of_data_points = number_of_data_points + df.shape[0]
-                plot_data_frame(df, "RealLatency", "index", result[2], result[4], ax_function)
-                plot_data_frame(df, "instances", "index", get_complementair(result[2]), "instances-"+threads, ax2)
-
-            plt.xlabel("request")
+            plt.xlabel("Number of calls")
             plt.ylabel("Latency (ms)")
+            ax_whole_process.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=3, fancybox=True, shadow=True)
             plt.title("Average latency for database access during {0} seconds".format(options.execution_time))
 
-            save_fig(plt, options.result_path, "{0}-{1}".format(options.provider, type), options.ts)
+            save_fig(plt, options.result_path, provider.value, options.ts)
+
+            for result in enriched_results_grouped:
+                plt.clf()
+                ax_function = plt.gca()
+                ax2 = ax_function.twinx()
+                df = result[1]
+                type = result[2].split("-")[0]
+
+                def map(x):
+                    if x == 202:
+                        return 1
+                    return 0
+
+                response_codes = df["responseCode"].to_numpy()
+                new_instances = [map(x) for x in response_codes]
+                new_instances_acc = np.cumsum(new_instances, dtype=int)
+                df["instances"] = new_instances_acc
+
+                start = 0
+                alpha = 0.0
+                for thread_area in result[3]:
+                    label = "{0} threads".format(thread_area[0])
+                    plt.axvspan(start, thread_area[1], facecolor='grey',  alpha=alpha, label=label)
+                    start = thread_area[1]
+                    alpha = alpha + 0.05
+
+                ax_function.hlines(df["RealLatency"].mean(), -10, df.shape[0]+10, label="Average latency", zorder=10)
+                plot_data_frame(df, "RealLatency", "index", result[0], type, ax_function)
+                plot_data_frame(df, "instances", "index", get_complementair(result[0]), "instances", ax2)
+
+                h1, l1 = ax_function.get_legend_handles_labels()
+                h2, l2 = ax2.get_legend_handles_labels()
+                ax_function.get_legend().remove()
+                ax2.get_legend().remove()
+                plt.legend(h1+h2, l1+l2, bbox_to_anchor=(1.05, 1.0), loc='upper left')
+                plt.tight_layout()
+                ax2.set_ylabel('instances')
+                ax_function.set_ylabel('Latency (ms)')
+                ax2.set_xlabel("Request index")
+                ax_function.set_xlabel("Request index")
+                plt.xlabel("Request index")
+                plt.title("Latency for database access")
+                save_fig(plt, options.result_path, "{0}-{1}".format(provider.value, type), options.ts)

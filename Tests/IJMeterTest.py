@@ -23,7 +23,7 @@ class PlotOptions:
     results: List[Result]
     execution_time: str
     result_path: str
-    provider: str
+    provider: List[Provider]
     ts: int
 
 

@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 matplotlib = "*"
 pandas = "*"
+tk = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.9"

@@ -1,0 +1,15 @@
+{
+  "name": "awsConcurrentSelectEndpointSelectAgain",
+  "version": "1.0.0",
+  "description": "AWS Functions sample that reads all data from AWS RDS for the Serverless framework",
+  "main": "handler.js",
+  "keywords": [
+    "azure",
+    "serverless"
+  ],
+  "dependencies": {
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.5"
+  }
+}

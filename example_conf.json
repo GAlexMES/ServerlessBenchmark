@@ -24,6 +24,12 @@
         "ReadAllAgain": "",
         "Write": "",
         "Reset": ""
+      },
+      "T09DatabaseSelectConcurrencyTest":  {
+        "Select": "",
+        "SelectAgain": "",
+        "Write": "",
+        "Reset": ""
       }
     },
     "azure": {
@@ -35,6 +41,12 @@
       "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
+        "Write": "",
+        "Reset": ""
+      },
+      "T09DatabaseSelectConcurrencyTest":  {
+        "Select": "",
+        "SelectAgain": "",
         "Write": "",
         "Reset": ""
       }
@@ -55,6 +67,12 @@
       "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
+        "Write": "",
+        "Reset": ""
+      },
+      "T09DatabaseSelectConcurrencyTest":  {
+        "Select": "",
+        "SelectAgain": "",
         "Write": "",
         "Reset": ""
       }
@@ -81,6 +99,12 @@
       "T08DatabaseConcurrencyTest":  {
         "ReadAll": "",
         "ReadAllAgain": "",
+        "Write": "",
+        "Reset": ""
+      },
+      "T09DatabaseSelectConcurrencyTest":  {
+        "Select": "",
+        "SelectAgain": "",
         "Write": "",
         "Reset": ""
       }

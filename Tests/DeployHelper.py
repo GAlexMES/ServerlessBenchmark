@@ -78,6 +78,12 @@ def install(function_path: str):
             cwd=function_path,
         )
 
+    if os.path.isfile("{0}/package.json".format(function_path)):
+        subprocess.check_output(
+            ["npm", "install"],
+            cwd=function_path,
+        )
+
 
 def build(function_path: str):
     if os.path.isfile("{0}/Makefile".format(function_path)):

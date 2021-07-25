@@ -19,8 +19,7 @@ def plot_result(
     execution_time: str,
 ):
     result_path = benchmark_result_path(jmeter_test.get_test_name())
-    result_name = "multiple" if len(providers) != 1 else providers[0]
-    jmeter_test.plot(PlotOptions(results, execution_time, result_path, result_name, ts))
+    jmeter_test.plot(PlotOptions(results, execution_time, result_path, providers, ts))
 
 
 def benchmark_result_path(test: str) -> str:

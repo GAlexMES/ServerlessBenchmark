@@ -8,6 +8,7 @@ provider:
   runtime: nodejs12.x
   region: eu-west-2
   memorySize: 256
+  lambdaHashingVersion: 20201221
   vpc:
     securityGroupIds:
       - sg-8418fcfb
