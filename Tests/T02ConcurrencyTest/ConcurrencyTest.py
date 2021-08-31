@@ -35,7 +35,7 @@ class ConcurrencyTest(IJMeterTest):
 
     def set_arguments(self, options: List[str] or None) -> bool:
         if super().check_arguments(options):
-            self.thread_range = (int(options[0]), int(options[1]) + 1, int(options[2]))
+            self.thread_range = range(int(options[0]), int(options[1]) + 1, int(options[2]))
             return True
         return False
 
@@ -107,4 +107,4 @@ class ConcurrencyTest(IJMeterTest):
         ax1.legend(frameon=True, loc="best", ncol=1)
         ax2.legend(frameon=True, loc="center left", ncol=1)
 
-        save_fig(plt, options.result_path, options.provider, options.ts)
+        save_fig(plt, options.result_path, self.get_test_name(), options.ts)

@@ -6,7 +6,8 @@ from Tests.T08DatabaseConcurrencyTest.DatabaseConcurrencyTest import DatabaseCon
 class DatabaseSelectConcurrencyTest(DatabaseConcurrencyTest):
     jmeter_template = os.path.join(os.path.dirname(__file__), "DatabaseSelectConcurrency.jmx")
     options = {
-        Provider.aws: ["Select", "Write", "SelectAgain"],
+        #Provider.aws: ["Select", "Write", "SelectAgain"],
+        Provider.aws: ["SelectAgain"],
     }
 
     def get_test_name(self):

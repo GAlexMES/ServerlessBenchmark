@@ -51,7 +51,7 @@ class DatabaseConcurrencyTest(IProviderSpecificJMeterTest):
         return files
 
     def run(self, options: RunOptions):
-        urllib.request.urlopen(options.function_url["Reset"]).read()
+        #urllib.request.urlopen(options.function_url["Reset"]).read()
         url_dict: Dict[str, str] = dict()
         for type in self.options[options.provider]:
             url_dict[type] = options.function_url[type] + "?counter=${counter_value}"

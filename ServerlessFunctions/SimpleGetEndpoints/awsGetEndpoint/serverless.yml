@@ -3,7 +3,7 @@ service: awsGetEndpoint
 provider:
   name: aws
   runtime: nodejs12.x
-  region: eu-central-1
+  region: eu-west-2
   memorySize: 256
   lambdaHashingVersion: "20201221"
 

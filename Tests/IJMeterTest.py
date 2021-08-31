@@ -38,7 +38,7 @@ class RunOptions:
 
 class IJMeterTest:
     jmeter_template: str = ""
-    supported_providers = [Provider.aws, Provider.ow, Provider.azure, Provider.google]
+    supported_providers = [Provider.aws, Provider.ow, Provider.azure, Provider.google, Provider.k8s]
     required_arguments_count = 0
 
     def is_test_applicable_for_provider(self, provider: Provider):
@@ -67,7 +67,6 @@ class IJMeterTest:
         return [FunctionInformation(function_path, None)]
 
     def update_template(self, url: str, execution_time: str, n_threads: int = 4):
-        print(str(n_threads))
         template = ElementTree.ElementTree(file=self.jmeter_template)
         return self.update_specific_template(url, execution_time, template, self.jmeter_template, n_threads)
 

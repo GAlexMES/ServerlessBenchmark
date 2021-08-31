@@ -21,6 +21,7 @@ class OverheadTest(IJMeterTest):
         return "../ServerlessFunctions/SimpleGetEndpoints/{0}GetEndpoint".format(provider.value)
 
     def run(self, options: RunOptions):
+
         self.update_template(options.function_url, options.execution_time)
         file_name = self.get_output_file_name(options.ts, options.provider)
 
@@ -47,4 +48,4 @@ class OverheadTest(IJMeterTest):
         plt.ylabel("Latency (ms)")
         plt.title("Latency of a sequence of invocations during {0} seconds".format(options.execution_time))
 
-        save_fig(plt, options.result_path, options.provider, options.ts)
+        save_fig(plt, options.result_path, self.get_test_name(), options.ts)

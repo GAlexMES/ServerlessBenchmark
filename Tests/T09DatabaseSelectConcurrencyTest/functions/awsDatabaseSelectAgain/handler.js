@@ -1,6 +1,7 @@
 'use strict';
 
 const { Sequelize, DataTypes } = require('sequelize');
+const {performance} = require('perf_hooks');
 
 let first = true;
 
@@ -30,9 +31,11 @@ module.exports.selectAgain = async (event) => {
     }else{
         console.log("no new instance :)")
     }
+    const before = performance.now();
     const entry = await DataModel.findOne({ where: { birthday: Number(event["queryStringParameters"]['counter']) } });
-
+    const after = performance.now();
     console.log("Found that entry:"+entry);
+    console.log("Took "+(after-before) + " ms")
     return {
         statusCode,
         body: JSON.stringify({

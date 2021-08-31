@@ -6,3 +6,4 @@ class Provider(Enum):
     azure = "azure"
     ow = "ow"
     google = "google"
+    k8s = "kubernetes"

@@ -80,40 +80,31 @@ python3 ServerlessBenchmarkAppInterface.py -s 3 -o min_wait_time max_wait_time t
 where min_wait_time is the first interval of waiting time between invocations;  
 max_wait_time is the last interval;  
 time_step is the step increment from the minimum to the maximum;  
-and re_execution_time is a warm-up time with invocations before the actual test, to enable the platform to prepare containers.  
+and pre_execution_time is a warm-up time with invocations before the actual test, to enable the platform to prepare containers.  
 
 ### Payload Test
 
 ```bash
-python3 ServerlessBenchmarkAppInterface.py -s 4 -o execution_time
+python3 ServerlessBenchmarkAppInterface.py -s 4 
 ```
-
-where execution_time is the amount of time the test should last.
-
 
 ### Overhead Language Test
 
 ```bash
-python3 ServerlessBenchmarkAppInterface.py -s 5 -o execution_time
+python3 ServerlessBenchmarkAppInterface.py -s 5 
 ```
-
-where execution_time is the amount of time the test should last.
 
 ### Memory Test
 
 ```bash
-python3 ServerlessBenchmarkAppInterface.py -s 6 -o execution_time
+python3 ServerlessBenchmarkAppInterface.py -s 6
 ```
-
-where execution_time is the amount of time the test should last.
 
 ### Weight Test
 
 ```bash
-python3 ServerlessBenchmarkAppInterface.py -s 7 -o execution_time
+python3 ServerlessBenchmarkAppInterface.py -s 7
 ```
-
-where execution_time is the amount of time the test should last.
 
 
 # Shoutout
