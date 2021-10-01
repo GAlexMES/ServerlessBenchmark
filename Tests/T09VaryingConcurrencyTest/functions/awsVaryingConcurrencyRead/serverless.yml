@@ -1,4 +1,4 @@
-service: awsSelectConcurrentTest-write
+service: awsVaryingConcurrentTestRead
 configValidationMode: warn
 custom: ${file(./database_environment.yml)}
 
@@ -41,9 +41,9 @@ resources:
               Resource: "*"
 
 functions:
-  write:
+  varyingConcurrencyRead:
     handler: handler.write
     events:
       - http:
-          path: awsSelectConcurrentTest/write
+          path: awsVaryingConcurrentTest/read
           method: get

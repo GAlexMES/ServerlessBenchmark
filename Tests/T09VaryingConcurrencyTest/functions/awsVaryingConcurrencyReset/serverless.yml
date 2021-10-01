@@ -1,6 +1,5 @@
-service: awsSelectConcurrentTest-select
+service: awsVaryingConcurrentTestReset
 configValidationMode: warn
-
 custom: ${file(./database_environment.yml)}
 
 provider:
@@ -42,9 +41,9 @@ resources:
               Resource: "*"
 
 functions:
-  select:
-    handler: handler.select
+  varyingConcurrencyReset:
+    handler: handler.awsResetConcurrentEndpoint
     events:
       - http:
-          path: awsSelectConcurrentTest/select
+          path: awsVaryingConcurrentTest/reset
           method: get

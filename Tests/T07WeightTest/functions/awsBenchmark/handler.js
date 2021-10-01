@@ -1,6 +1,14 @@
 'use strict';
+let first = true
 
 module.exports.awsFunctionT7 = async(event, context) => {
+  let statusCode = 200;
+  if(first) {
+    first = false;
+    statusCode = 202;
+  }
+
+
   let n = 35;
   var stringv = 0;
   if (event.queryStringParameters !== null && event.queryStringParameters !== undefined) {
@@ -14,7 +22,7 @@ module.exports.awsFunctionT7 = async(event, context) => {
     stringv = fib(n);
    
   return {
-    statusCode: 200,
+    statusCode: statusCode,
     body: JSON.stringify({
       message: '' + stringv,
     }),

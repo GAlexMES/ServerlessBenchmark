@@ -7,7 +7,7 @@ from Tests.T05OverheadLanguagesTest.OverheadLanguagesTest import OverheadLanguag
 from Tests.T06MemoryTest.MemoryTest import MemoryTest
 from Tests.T07WeightTest.WeightTest import WeightTest
 from Tests.T08DatabaseConcurrencyTest.DatabaseConcurrencyTest import DatabaseConcurrencyTest
-from Tests.T09DatabaseSelectConcurrencyTest.DatabaseSelectConcurrencyTest import DatabaseSelectConcurrencyTest
+from Tests.T09VaryingConcurrencyTest.VaryingConcurrencyTest import VaryingConcurrencyTest
 
 
 def get_function_for_number(test_number: str) -> IJMeterTest:
@@ -28,5 +28,5 @@ def get_function_for_number(test_number: str) -> IJMeterTest:
     if test_number == 8:
         return DatabaseConcurrencyTest()
     if test_number == 9:
-        return DatabaseSelectConcurrencyTest()
+        return VaryingConcurrencyTest()
     print("Error! Function with number {0} does not exist!".format(test_number))

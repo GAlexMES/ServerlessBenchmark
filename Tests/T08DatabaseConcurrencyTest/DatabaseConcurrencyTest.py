@@ -1,5 +1,4 @@
 import os
-import urllib.request
 from typing import Dict, List
 
 import matplotlib.pyplot as plt

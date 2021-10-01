@@ -15,12 +15,14 @@ const sequelize = new Sequelize(
 );
 
 // if the database does not have a model table do a DataModel.sync()
-const DataModel = sequelize.define("model", {
-    name: DataTypes.TEXT,
-    birthday: DataTypes.INTEGER,
+const DataModel = sequelize.define("varyingModel", {
+    instanceId: DataTypes.UUID,
+    firstAccess: DataTypes.TEXT,
+    lastAccess: DataTypes.TEXT,
+    numberOfAccesses: DataTypes.INTEGER,
 });
 
-module.exports.reset = async (event, context, callback) => {
+module.exports.awsResetConcurrentEndpoint = async (event, context, callback) => {
     await DataModel.destroy({truncate: true}).then(() => DataModel.sync()).then(() => {
         callback(null, {
             statusCode: 200,
